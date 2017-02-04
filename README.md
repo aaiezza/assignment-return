@@ -1,6 +1,6 @@
 # Assignment Return
 
-This application is for returning graded student assignments efficiently and with student privacy in mind. The idea for the work flow comes from Dan McNabney, a lecturer in the Biology Department at the University of Rochester.
+This application is for returning graded student assignments efficiently and with student privacy in mind.
 
 The benefits this project may offer are (1) privacy for student grades during assignment return, (2) ease of return for a lecturer, and (3) student dishonesty prevention.
 
@@ -10,8 +10,9 @@ The benefits this project may offer are (1) privacy for student grades during as
 
 1. **Gather student assignments**
   * Ensure the stack of student assignments is alphabetically ordered and that students who were unable to provide an assignment have an empty placeholder assignment with their name on it
-  * If it is planned to use a conventionally sophisticated office scanner, no staples should be binding the assignments
-  * Ideally, it may also be desirable for the assignment to not be double sided depending on the equipment that is planned to be used in the next step
+  * If it is planned to use a conventional
+  office scanner, no staples should be binding the assignments
+  * It may also be desirable for the assignment to not be double sided depending on the equipment that is planned to be used in the next step
 
 2. **Create combined PDF**
 
@@ -39,7 +40,7 @@ The benefits this project may offer are (1) privacy for student grades during as
   
 4. **Feed this file to the application**
 
-  At this point, the application can do the rest. Using the command line in the early version of this application, do the following:
+  At this point, the application can do the rest. Using the command line in the early version of this application, run the following:
   ```bash
   java -jar assignment-return.jar "Assignment_Title" /path/to/combined.pdf  /path/to/roster.txt
   ```
@@ -53,7 +54,7 @@ The benefits this project may offer are (1) privacy for student grades during as
 
 1. **Split/Separate PDF into separate student assignment files**
 
-  It will be necessary to have the `combined.pdf` file parsed into the individual assignments and eventually renamed accordingly. The first thing to consider is where these files should be generated to.
+  It is necessary to have the `combined.pdf` file separated into individual assignments and named appropriately. The first thing to consider is where these files should be generated to.
   
   * Using the `--pdf-output,-o` option, the user can define the path to which the individual files are saved.
   
@@ -61,7 +62,7 @@ The benefits this project may offer are (1) privacy for student grades during as
 
   --
 
-  The next thing to consider is the naming convention of the files. Naturally the names of students will more than likely be the standard desired incorporation; but users may also prefer a prefix or suffix of: a date/time stamp, pdf-split number (`01` &mdash; `# of students`), student ID, assignment number or title, etc.
+  The next thing to consider is the naming convention of the files. The names of students will likely be the desired incorporation; but users may also prefer a prefix or suffix of: a date/time stamp, pdf-split number (`01` &mdash; `# of students`), student ID, assignment number or title, etc.
 
   * To accomodate for better file naming customizations, the `--pdf-naming` option will be useful.<br/><br/>
   The exact name of the individual files should be provided after this option, where any references to fields in the `roster.txt` file are be indicated by surrounding the **case-sensitive** name in curly braces: `{{firstname}}`.<br/><br/>
