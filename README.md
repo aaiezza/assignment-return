@@ -21,8 +21,8 @@ The benefits this project may offer are (1) privacy for student grades during as
 
   The tab delimited header row in this file must contain the following fields:
   
-  | firstname | lastname | email |
-  | --------- | -------- | ----- |
+  | `firstname` | `lastname` | `email` |
+  | ----------- | ---------- | ------- |
   
   (The delimiter may be changed to some other character using the `--delimiter, -d` flag.)<br/>
   For a class of 3 students, the **`roster.txt`** file might look like this:
@@ -69,9 +69,9 @@ The benefits this project may offer are (1) privacy for student grades during as
 
     | Field Name | Outputs | 
     | :--------: | ------- |
-    | #          | The ordered number split-off starting with 1.<br/><br/>*Leading zeros are automatically added depending on the number of total students. With a `roster.txt` containing 200 students*:<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{#}}` &rarr; `001.pdf` |
-    | TIME | Date and time of file creation.<br/><br/>*Better support for timestamps may come in later versions, and will most likely utilize Java's [SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).*<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{TIME yyyyMMdd_HHmmss}}` &rarr; `20170203_160545.pdf` |
-    | ASSIGNMENT | The assignment name given at the command line. |
+    | `#`        | The ordered number split-off starting with 1.<br/><br/>*Leading zeros are automatically added depending on the number of total students. With a `roster.txt` containing 200 students*:<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{#}}` &rarr; `001.pdf` |
+    | `TIME`     | Date and time of file creation.<br/><br/>*Better support for timestamps may come in later versions, and will most likely utilize Java's [SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).*<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{TIME yyyyMMdd_HHmmss}}` &rarr; `20170203_160545.pdf` |
+    | `ASSIGNMENT` | The assignment name given at the command line. |
   * In the future, it may be desirable to require the use of a student ID, to make it easier to deal with students with the same name, as rare as it might be.*
 
   *By default, the naming of individual PDFs will be*<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{#}}_{{lastname}}-{{firstname}}_{{ASSIGNMENT}}` &rarr; `023_Hatherford-Tom_Quiz3.pdf`
