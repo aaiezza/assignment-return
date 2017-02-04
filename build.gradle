@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+}
+
+// Explicitly create the main configuration
+configurations {
+   main
+}
+
+dependencies {
+    compile group: 'com.beust', name: 'jcommander', version: '1.60'
+    compile 'com.google.guava:guava:18.0'
+
+    compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.4'
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+
+    testCompile 'junit:junit:4.+'
+    testCompile 'junit-addons:junit-addons:1.+'
+    
+    main configurations.compile
+}
+
+// Redefine the sourcesets
+sourceSets {
+    main {
+        java.srcDir 'src'
+        resources {
+            srcDir 'resources'
+        }
+    }
+    test {
+        java.srcDir 'test'
+        resources.srcDirs 'test_resources', main.resources
+    }
+}
