@@ -1,8 +1,9 @@
 # Assignment Return
 
-This application is for returning graded student assignments efficiently and with student privacy in mind.
+This application is for returning graded student assignments efficiently and with student privacy in mind. The credit for the idea belongs to [Dr. Daniel McNabney](https://www.rochester.edu/college/bio/people/faculty/mcnabney_daniel/index.html).
 
-The benefits this project may offer are (1) privacy for student grades during assignment return, (2) ease of return for a lecturer, and (3) student dishonesty prevention.
+
+The benefits this project may offer are (1) private returns of student assignments in compliance with [FERPA](https://www2.ed.gov/policy/gen/guid/fpco/ferpa/students.html) regulations, (2) efficient and effective return of graded course materials, and (3) academic dishonesty prevention.
 
 ---
 
