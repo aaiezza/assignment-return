@@ -23,6 +23,8 @@ import com.google.common.collect.Table;
 import edu.rochester.bio.ar.util.RosterFileParser;
 
 /**
+ * A suite of unit tests for the {@link AssignmentReturnerInterpolator}
+ * 
  * @author Alex Aiezza
  *
  */
@@ -151,6 +153,17 @@ public class AssignmentReturnerInterpolatorTest
                 .collect( Collectors.toList() ),
             interpMessage );
     }
+
+    @Test
+    public void testDefaultMessage()
+    {
+        ari = new AssignmentReturnerInterpolator( roster, assignment );
+        final List<String> interpMessage = ari.convert();
+        assertEquals( "17_" + roster.get( 17, "lastname" ) + "-" + roster.get( 17, "firstname" ) +
+                "_" + assignment,
+            interpMessage.get( 16 ) );
+    }
+
 
     @Test
     public void testCustomMessage01()

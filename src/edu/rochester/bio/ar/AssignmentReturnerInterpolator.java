@@ -4,6 +4,7 @@
 package edu.rochester.bio.ar;
 
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 
 /**
@@ -155,16 +156,17 @@ public class AssignmentReturnerInterpolator
 
         assert ( components.size() > 0 );
 
-        final Map<String, Boolean> messC = Maps.newLinkedHashMap();
+        final List<Entry<String, Boolean>> messC = Lists.newArrayList();
 
         for ( int i = 0; i < components.size(); i++ )
         {
             if ( components.get( i ).equals( "" ) )
                 continue;
-            messC.put( components.get( i ), match( components.get( i ) ).isPresent() );
+            messC.add( new SimpleImmutableEntry<String, Boolean>( components.get( i ),
+                    match( components.get( i ) ).isPresent() ) );
         }
 
-        return messC.entrySet().stream();
+        return messC.stream();
     }
 
     private <E extends Entry<Integer, Map<String, String>>> String interpolateUsing( final E row )
@@ -236,6 +238,7 @@ public class AssignmentReturnerInterpolator
 
     private Optional<VariableField> match( final String field )
     {
+        // TODO Move this stream into an instance member
         return Stream.of( splitOccuranceVariable, timestampVariable, assignmentVariable,
             tableHeaderVariable ).filter( fR ->
         {

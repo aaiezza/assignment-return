@@ -4,7 +4,10 @@
 package edu.rochester.bio.ar;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
+import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
@@ -15,9 +18,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
  */
 public class AssignmentSplitter
 {
+    static final String                          ILLEGAL_ASSIGNMENT_LENGTH_FORMAT = "The total number of pages in the document (%d) must be divisible by the number of students in the roster (%d).\n    [%1$03d %% %2$03d = %d EXTRA PAGES]";
+
     private final PDDocument                     combinedAssignment;
 
-    private final File                           outputDirectory;
+    private File                                 outputDirectory;
 
     private final AssignmentReturnerInterpolator ari;
 
@@ -41,7 +46,7 @@ public class AssignmentSplitter
         this.ari = ari;
     }
 
-    public void split()
+    public void split() throws IOException
     {
         // Ensure the output directory exists
         if ( !outputDirectory.exists() )
@@ -49,11 +54,28 @@ public class AssignmentSplitter
 
         final int assignmentLength = combinedAssignment.getNumberOfPages() /
                 ari.getRoster().rowMap().size();
+        final int difference = combinedAssignment.getNumberOfPages() %
+                ari.getRoster().rowMap().size();
 
-        ari.convert().forEach( fileName -> {
-            // Splitter
-        } );
+        if ( difference > 0 )
+            throw new IllegalStateException( String.format( ILLEGAL_ASSIGNMENT_LENGTH_FORMAT,
+                combinedAssignment.getNumberOfPages(), ari.getRoster().rowMap().size(),
+                difference ) );
 
+        final Splitter pdfSplitter = new Splitter();
+        pdfSplitter.setSplitAtPage( assignmentLength );
+
+        final List<PDDocument> individualPDFs = pdfSplitter.split( combinedAssignment );
+        final List<String> pdfNames = ari.convert();
+        for ( int i = 0; i < pdfNames.size(); i++ )
+        {
+            individualPDFs.get( i )
+                    .save( String.format( "%s/%s.pdf", outputDirectory, pdfNames.get( i ) ) );
+        }
+
+        combinedAssignment.close();
+        for ( final PDDocument ip : individualPDFs )
+            ip.close();
+        outputDirectory = null;
     }
-
 }
