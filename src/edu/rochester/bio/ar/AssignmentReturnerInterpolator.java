@@ -1,5 +1,5 @@
 /**
- *  COPYRIGHT (C) 2015 Alex Aiezza. All Rights Reserved.
+ *  COPYRIGHT (C) 2017 Alex Aiezza. All Rights Reserved.
  */
 package edu.rochester.bio.ar;
 
@@ -87,14 +87,30 @@ public class AssignmentReturnerInterpolator
     private final VariableField                  tableHeaderVariable;
     // @formatter:on
 
-    private final String                         message, assignment;
+    private final String                         assignment;
+    private String                               message;
     private final Table<Integer, String, String> roster;
 
     /**
      * @param roster
-     *            the table of student information
+     *            The table of student information
+     * @param assignment
+     *            Name of the assignment that is being interpolated for.
+     */
+    public AssignmentReturnerInterpolator(
+        Table<Integer, String, String> roster,
+        String assignment )
+    {
+        this( DEFUALT_MESSAGE, roster, assignment );
+    }
+
+    /**
      * @param message
-     *            the message to interpolate
+     *            The message to interpolate
+     * @param roster
+     *            The table of student information
+     * @param assignment
+     *            Name of the assignment that is being interpolated for.
      */
     public AssignmentReturnerInterpolator(
         String message,
@@ -102,9 +118,10 @@ public class AssignmentReturnerInterpolator
         String assignment )
     {
         super();
-        this.message = message.length() <= 0 ? DEFUALT_MESSAGE : message;
         this.roster = roster;
         this.assignment = assignment;
+
+        setMessage( message );
 
         final StringBuilder tableHeaderRegex = new StringBuilder();
         roster.columnKeySet().forEach( col -> tableHeaderRegex.append( col ).append( "|" ) );
@@ -118,7 +135,19 @@ public class AssignmentReturnerInterpolator
                 .collect( Collectors.toList() );
     }
 
-    public Stream<Entry<String, Boolean>> getMessageComponents()
+    /**
+     * @param message
+     *            The new message to use.
+     * @return The list of interpolated messages with fields replaced by their
+     *         appropriate values.
+     */
+    public List<String> convert( final String message )
+    {
+        setMessage( message );
+        return convert();
+    }
+
+    Stream<Entry<String, Boolean>> getMessageComponents()
     {
         final List<String> components = Stream.of( message.split( START_VARIABLE_DELIMITER ) )
                 .flatMap( s -> Stream.of( s.split( END_VARIABLE_DELIMITER ) ) )
@@ -145,6 +174,26 @@ public class AssignmentReturnerInterpolator
                                         : e.getKey() )
                 .collect( StringBuilder::new, StringBuilder::append, StringBuilder::append )
                 .toString();
+    }
+
+    public Table<Integer, String, String> getRoster()
+    {
+        return roster;
+    }
+
+    public String getAssignment()
+    {
+        return assignment;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public void setMessage( final String message )
+    {
+        this.message = message == null || message.length() <= 0 ? DEFUALT_MESSAGE : message;
     }
 
     public class VariableField
@@ -181,12 +230,9 @@ public class AssignmentReturnerInterpolator
         @Override
         public String toString()
         {
-            return fieldRegex;
+            return "Field: " + fieldRegex;
         }
-
-
     }
-
 
     private Optional<VariableField> match( final String field )
     {
@@ -195,10 +241,5 @@ public class AssignmentReturnerInterpolator
         {
                 return field.matches( fR.fieldRegex );
             } ).findFirst();
-    }
-
-    Table<Integer, String, String> getRoster()
-    {
-        return roster;
     }
 }

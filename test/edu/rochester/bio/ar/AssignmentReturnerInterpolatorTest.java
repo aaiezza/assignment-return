@@ -1,5 +1,5 @@
 /**
- *  COPYRIGHT (C) 2015 Alex Aiezza. All Rights Reserved.
+ *  COPYRIGHT (C) 2017 Alex Aiezza. All Rights Reserved.
  */
 package edu.rochester.bio.ar;
 
