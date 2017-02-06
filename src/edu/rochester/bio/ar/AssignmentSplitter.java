@@ -3,6 +3,8 @@
  */
 package edu.rochester.bio.ar;
 
+import static edu.rochester.bio.ar.util.RosterFileParser.PDF_PATH_COLUMN;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -69,8 +71,11 @@ public class AssignmentSplitter
         final List<String> pdfNames = ari.convert();
         for ( int i = 0; i < pdfNames.size(); i++ )
         {
-            individualPDFs.get( i )
-                    .save( String.format( "%s/%s.pdf", outputDirectory, pdfNames.get( i ) ) );
+            final String pdfName = String.format( "%s/%s.pdf", outputDirectory, pdfNames.get( i ) );
+
+            individualPDFs.get( i ).save( pdfName );
+
+            ari.getRoster().put( i, PDF_PATH_COLUMN, pdfName );
         }
 
         combinedAssignment.close();

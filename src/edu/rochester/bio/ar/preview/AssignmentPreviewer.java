@@ -41,8 +41,15 @@ public class AssignmentPreviewer extends JFrame
         this.roster = roster;
         this.pdfDirectory = pdfDirectory;
         this.assignment = assignment;
+    }
 
+    public void preview()
+    {
         initJFrame();
+
+        // TODO: Allow the user to preview and amend the roster
+
+        // TODO: When the user is done previewing, terminate the window
     }
 
     private void initJFrame()
