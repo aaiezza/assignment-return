@@ -43,7 +43,7 @@ The benefits this project may offer are (1) private returns of student assignmen
 
   At this point, the application can do the rest. Using the command line in the early version of this application, run the following:
   ```bash
-  java -jar assignment-return.jar "Assignment_Title" /path/to/combined.pdf  /path/to/roster.txt
+  java -jar assignment-return.jar --assignment "Assignment_Title"  --roster /path/to/roster.txt  /path/to/combined.pdf
   ```
   The functionality of the application from this point is outlined below. Through the use of different options and flags on the command, a user can further manipulate this pipeline process.
   
@@ -72,7 +72,7 @@ The benefits this project may offer are (1) private returns of student assignmen
     | Field Name | Outputs | 
     | :--------: | ------- |
     | `#`        | The ordered number split-off starting with 1.<br/><br/>*Leading zeros are automatically added depending on the number of total students. With a `roster.txt` containing 200 students*:<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{#}}` &rarr; `001.pdf` |
-    | `TIME`     | Date and time of file creation.<br/><br/>*Better support for timestamps may come in later versions, and will most likely utilize Java's [SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).*<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{TIME yyyyMMdd_HHmmss}}` &rarr; `20170203_160545.pdf` |
+    | `TIME`     | Date and time of file creation.<br/><br/>*Timestamps utilize Java's [SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html). Consult the JavaDoc for it for more timestamp options.*<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{{TIME yyyyMMdd_HHmmss}}` &rarr; `20170203_160545.pdf` |
     | `ASSIGNMENT` | The assignment name given at the command line. |
   * In the future, it may be desirable to require the use of a student ID, to make it easier to deal with students with the same name, as rare as it might be.*
 
@@ -80,11 +80,10 @@ The benefits this project may offer are (1) private returns of student assignmen
 
   --
 
-  The final concern is how the `combined.pdf` ought to be split. In other words, the number of pages that make up the assignment.
+  The final concern is how the `combined.pdf` ought to be split. In other words, the number of pages that make up the assignment.<br/>
+  * *By default, this number is* (the number of pages in the `combined.pdf` file) / (the number of students in the `roster.txt` file).
   
-  * Use the `--assignment-length,-n` option and provide a number indicating the number of pages that make up the assignment.
-  
-  *By default, this number is* (the number of pages in the `combined.pdf` file) / (the number of students in the `roster.txt` file).
+  *Use of the `--assignment-length,-n` option has been added but is depracted. The intention of this option is to manually override the number of pages that make up the assignment. However, if allowed to be provided, may negatively affect the PDF splitting.*
 
 2. **User preview for error checking**
 
@@ -96,9 +95,10 @@ The benefits this project may offer are (1) private returns of student assignmen
 
   The `email` field is required in the `roster.txt` file for this step. By default, this tool will not email students and only split a combined PDF document. For this step to occur, the `--email, -e` option must be specified and the path to a `template.txt` file must provided.
   
-  The `template.txt` file undergoes the same replacement-syntax as the individual PDF file naming conventions. An example of this file might be the following:
+  The `template.txt` file undergoes the same replacement-syntax as the individual PDF file naming conventions. The subject line of the email should be provided in the first line of this file, followed by the message body. An example of this file might be the following:
   
     ```text
+    BIO 289 | Graded {{ASSIGNMENT}}
     Hello {{firstname}} {{lastname}},
     
     Here is your graded assignment: {{ASSIGNMENT}}.
