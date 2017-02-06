@@ -43,7 +43,7 @@ The benefits this project may offer are (1) private returns of student assignmen
 
   At this point, the application can do the rest. Using the command line in the early version of this application, run the following:
   ```bash
-  java -jar assignment-return.jar "Assignment_Title" /path/to/combined.pdf  /path/to/roster.txt
+  java -jar assignment-return.jar --assignment "Assignment_Title"  --roster /path/to/roster.txt  /path/to/combined.pdf
   ```
   The functionality of the application from this point is outlined below. Through the use of different options and flags on the command, a user can further manipulate this pipeline process.
   
