@@ -10,8 +10,7 @@ import java.nio.charset.Charset;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import edu.rochester.bio.ar.model.Roster;
 
 /**
  * @author Alex Aiezza
@@ -22,30 +21,26 @@ public class RosterFileParser
     /* Roster file delimiter */
     public static final char DEFAULT_ROSTER_DELIMITER = '\t';
 
-    public static Table<Integer, String, String> parseRoster( final String rosterFile )
-            throws IOException
+    public static Roster parseRoster( final String rosterFile ) throws IOException
     {
         return parseRoster( rosterFile, DEFAULT_ROSTER_DELIMITER );
     }
 
-    public static Table<Integer, String, String> parseRoster(
-            final String rosterFile,
-            final char delimiter ) throws IOException
+    public static Roster parseRoster( final String rosterFile, final char delimiter )
+            throws IOException
     {
         return parseRoster( new File( rosterFile ), delimiter );
     }
 
-    public static Table<Integer, String, String> parseRoster( final File rosterFile )
-            throws IOException
+    public static Roster parseRoster( final File rosterFile ) throws IOException
     {
         return parseRoster( rosterFile, DEFAULT_ROSTER_DELIMITER );
     }
 
-    public static Table<Integer, String, String> parseRoster(
-            final File rosterFile,
-            final char delimiter ) throws IOException
+    public static Roster parseRoster( final File rosterFile, final char delimiter )
+            throws IOException
     {
-        final Table<Integer, String, String> roster = HashBasedTable.create();
+        final Roster roster = Roster.create();
 
         final CSVParser rosterParser = CSVParser.parse( rosterFile, Charset.defaultCharset(),
             CSVFormat.newFormat( delimiter ).withHeader() );

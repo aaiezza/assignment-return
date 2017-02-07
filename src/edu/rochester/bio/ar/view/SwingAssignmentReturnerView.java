@@ -7,52 +7,30 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.io.File;
+import java.beans.PropertyChangeSupport;
 
 import javax.swing.JFrame;
 
-import com.google.common.collect.Table;
-
 /**
- * TODO Will have some form of JFrame to show assignments.
- * 
  * @author Alex Aiezza
  *
  */
-public class AssignmentPreviewer extends JFrame
+public class SwingAssignmentReturnerView extends JFrame implements AssignmentReturnerView
 {
-    private static final long                    serialVersionUID = 1L;
+    private static final long           serialVersionUID = 1L;
 
-    private final Table<Integer, String, String> roster;
-    private final File                           pdfDirectory;
-    private final String                         assignment;
+    private final PropertyChangeSupport propertyChangeSupport;
 
     /**
-     * @param roster
-     * @param pdfDirectory
      * @throws HeadlessException
      */
-    public AssignmentPreviewer(
-        Table<Integer, String, String> roster,
-        File pdfDirectory,
-        String assignment ) throws HeadlessException
+    public SwingAssignmentReturnerView() throws HeadlessException
     {
         super();
-        this.roster = roster;
-        this.pdfDirectory = pdfDirectory;
-        this.assignment = assignment;
+        propertyChangeSupport = new PropertyChangeSupport( this );
     }
 
-    public void preview()
-    {
-        initJFrame();
-
-        // TODO: Allow the user to preview and amend the roster
-
-        // TODO: When the user is done previewing, terminate the window
-    }
-
-    private void initJFrame()
+    private void initJFrame( final String assignment )
     {
         setTitle( String.format( "AssignmentReturner Preview: %s", assignment ) );
         final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -68,5 +46,21 @@ public class AssignmentPreviewer extends JFrame
         // TODO Create and add the StudentAssignmentConfirmer JPanel to left
 
         // TODO Create and add AssignmentPDFViewer JPanel to the right
+    }
+
+    @Override
+    public void run()
+    {
+        initJFrame( "" );
+
+        // TODO: Allow the user to preview and amend the roster
+
+        // TODO: When the user is done previewing, terminate the window
+    }
+
+    @Override
+    public PropertyChangeSupport getPropertyChangeSupport()
+    {
+        return propertyChangeSupport;
     }
 }

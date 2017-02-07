@@ -18,9 +18,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
 
-import edu.rochester.bio.ar.util.RosterFileParser;
+import edu.rochester.bio.ar.model.Roster;
 
 /**
  * A suite of unit tests for the {@link AssignmentReturnerInterpolator}
@@ -30,11 +29,11 @@ import edu.rochester.bio.ar.util.RosterFileParser;
  */
 public class AssignmentReturnerInterpolatorTest
 {
-    public AssignmentReturnerInterpolator        ari;
+    public AssignmentReturnerInterpolator ari;
 
-    public static Table<Integer, String, String> roster;
+    public static Roster                  roster;
 
-    public static String                         message, assignment;
+    public static String                  message, assignment;
 
     @BeforeClass
     public static void init() throws IOException

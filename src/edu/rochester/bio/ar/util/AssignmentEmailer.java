@@ -18,8 +18,9 @@ import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 
-import com.google.common.collect.Table;
 import com.google.common.io.Files;
+
+import edu.rochester.bio.ar.model.Roster;
 
 /**
  * Uses the Apache Commons Email API for sending assignments back to students
@@ -29,7 +30,7 @@ import com.google.common.io.Files;
  */
 public class AssignmentEmailer
 {
-    private final Table<Integer, String, String> roster;
+    private final Roster                         roster;
     private final AssignmentReturnerInterpolator ariEmailTemplate;
 
     private final String                         subjectMessage;
@@ -77,7 +78,7 @@ public class AssignmentEmailer
             final EmailAttachment attachment = new EmailAttachment();
             attachment.setPath( pdfAttachment.getAbsolutePath() );
             attachment.setDisposition( EmailAttachment.ATTACHMENT );
-            attachment.setDescription( "Graded assignment: " + ariEmailTemplate.getAssignment() );
+            attachment.setDescription( "Graded assignment: " + ariEmailTemplate.getAssignmentName() );
             attachment.setName( pdfAttachment.getName() );
 
             final MultiPartEmail email = new MultiPartEmail();
