@@ -1,0 +1,8 @@
+BIO 289 | Graded {{ASSIGNMENT}}
+Hello {{firstname}} {{lastname}},
+
+Here is your graded assignment: {{ASSIGNMENT}}.
+If you have any questions, feel free to reply.
+
+- Professor Snape
+  

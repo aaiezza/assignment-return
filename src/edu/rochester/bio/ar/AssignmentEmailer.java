@@ -4,12 +4,19 @@
 package edu.rochester.bio.ar;
 
 import static edu.rochester.bio.ar.util.RosterFileParser.EMAIL_HEADER;
+import static edu.rochester.bio.ar.util.RosterFileParser.FIRST_NAME_HEADER;
+import static edu.rochester.bio.ar.util.RosterFileParser.LAST_NAME_HEADER;
 import static edu.rochester.bio.ar.util.RosterFileParser.PDF_PATH_COLUMN;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailAttachment;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
 
 import com.google.common.collect.Table;
 import com.google.common.io.Files;
@@ -29,12 +36,22 @@ public class AssignmentEmailer
     private final String                         subjectMessage;
     private final String                         bodyMessage;
 
+    private final String                         hostName;
+    private final int                            smtpPort;
+    private final String                         fromEmail;
+
     public AssignmentEmailer(
         AssignmentReturnerInterpolator ariEmailTemplate,
-        File emailTemplateFile ) throws IOException
+        File emailTemplateFile,
+        String hostName,
+        int smtpPort,
+        String fromEmail ) throws IOException
     {
         this.roster = ariEmailTemplate.getRoster();
         this.ariEmailTemplate = ariEmailTemplate;
+        this.hostName = hostName;
+        this.smtpPort = smtpPort;
+        this.fromEmail = fromEmail;
 
         final String template = Files.toString( emailTemplateFile, Charset.defaultCharset() );
         final String [] templatePieces = template.split( "\n", 2 );
@@ -43,23 +60,42 @@ public class AssignmentEmailer
     }
 
 
-    public void sendEmails()
+    public void sendEmails( final String password ) throws EmailException
     {
         final List<String> subjectLines = ariEmailTemplate.convert( subjectMessage );
         final List<String> emailBodies = ariEmailTemplate.convert( bodyMessage );
 
-        for ( int i = 0; i < roster.rowMap().size(); i++ )
+        for ( int i = 0, r = 1; i < roster.rowMap().size(); i++, r++ )
         {
             // Prep email
-
             final String subject = subjectLines.get( i );
             final String body = emailBodies.get( i );
-            final File attachment = new File( roster.get( i, PDF_PATH_COLUMN ) );
+            final File pdfAttachment = new File( roster.get( r, PDF_PATH_COLUMN ) );
 
-            final String from = "TODO";
-            final String to = roster.get( i, EMAIL_HEADER );
+            final String to = roster.get( r, EMAIL_HEADER );
 
-            // TODO: Build email and send it out!
+            // Build email and send it out!
+            final EmailAttachment attachment = new EmailAttachment();
+            attachment.setPath( pdfAttachment.getAbsolutePath() );
+            attachment.setDisposition( EmailAttachment.ATTACHMENT );
+            attachment.setDescription( "Graded assignment: " + ariEmailTemplate.getAssignment() );
+            attachment.setName( pdfAttachment.getName() );
+
+            final MultiPartEmail email = new MultiPartEmail();
+            email.setDebug( true );
+            email.setHostName( hostName );
+            email.setSmtpPort( smtpPort );
+            email.setSSLCheckServerIdentity( true );
+            email.setStartTLSRequired( true );
+            email.setAuthenticator( new DefaultAuthenticator( fromEmail, password ) );
+            email.addTo( to, String.format( "%s %s", roster.get( r, FIRST_NAME_HEADER ),
+                roster.get( r, LAST_NAME_HEADER ) ) );
+            email.setFrom( fromEmail );
+            email.setSubject( subject );
+            email.setMsg( body );
+            email.attach( attachment );
+
+            email.send();
         }
     }
 }
