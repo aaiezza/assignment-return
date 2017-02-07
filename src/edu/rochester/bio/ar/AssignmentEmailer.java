@@ -22,8 +22,7 @@ import com.google.common.collect.Table;
 import com.google.common.io.Files;
 
 /**
- * TODO Use the Apache Commons Email API for sending assignments back to
- * students
+ * Uses the Apache Commons Email API for sending assignments back to students
  * 
  * @author Alex Aiezza
  *
