@@ -1,7 +1,7 @@
 /**
  *  COPYRIGHT (C) 2017 Alex Aiezza. All Rights Reserved.
  */
-package edu.rochester.bio.ar.preview;
+package edu.rochester.bio.ar.view;
 
 import java.awt.Color;
 import java.awt.Dimension;

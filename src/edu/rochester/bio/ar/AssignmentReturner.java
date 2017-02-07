@@ -19,8 +19,11 @@ import com.beust.jcommander.validators.PositiveInteger;
 import com.google.common.collect.Table;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import edu.rochester.bio.ar.preview.AssignmentPreviewer;
+import edu.rochester.bio.ar.util.AssignmentEmailer;
+import edu.rochester.bio.ar.util.AssignmentReturnerInterpolator;
+import edu.rochester.bio.ar.util.AssignmentSplitter;
 import edu.rochester.bio.ar.util.RosterFileParser;
+import edu.rochester.bio.ar.view.AssignmentPreviewer;
 
 /**
  * @author Alex Aiezza

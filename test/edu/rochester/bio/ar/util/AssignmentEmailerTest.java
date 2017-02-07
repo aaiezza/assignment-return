@@ -1,7 +1,7 @@
 /**
  *  COPYRIGHT (C) 2017 Alex Aiezza. All Rights Reserved.
  */
-package edu.rochester.bio.ar;
+package edu.rochester.bio.ar.util;
 
 import java.io.File;
 import java.io.IOException;

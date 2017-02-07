@@ -1,9 +1,9 @@
 /**
  *  COPYRIGHT (C) 2017 Alex Aiezza. All Rights Reserved.
  */
-package edu.rochester.bio.ar;
+package edu.rochester.bio.ar.util;
 
-import static edu.rochester.bio.ar.util.RosterFileParser.PDF_PATH_COLUMN;
+import static edu.rochester.bio.ar.model.Roster.PDF_PATH_COLUMN;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 /**
  *  COPYRIGHT (C) 2017 Alex Aiezza. All Rights Reserved.
  */
-package edu.rochester.bio.ar;
+package edu.rochester.bio.ar.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

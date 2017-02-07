@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.google.common.collect.Table;
 
 import edu.rochester.bio.ar.util.RosterFileParser;
+import edu.rochester.bio.ar.view.AssignmentPreviewer;
 
 public class AssignmentPreviewerTest
 {
