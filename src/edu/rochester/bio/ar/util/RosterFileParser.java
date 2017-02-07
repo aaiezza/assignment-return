@@ -27,7 +27,7 @@ public class RosterFileParser
     public static final String EMAIL_HEADER             = "email";
 
     /* Header values that are added and used internally */
-    public static final String PDF_PATH_COLUMN          = "pdfLocation";
+    public static final String PDF_PATH_COLUMN          = "pdflocation";
 
     /* Roster file delimiter */
     public static final char   DEFAULT_ROSTER_DELIMITER = '\t';

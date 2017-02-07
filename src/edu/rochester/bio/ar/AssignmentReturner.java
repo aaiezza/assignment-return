@@ -104,6 +104,35 @@ public class AssignmentReturner implements Runnable
         converter = FileConverter.class )
     private File                           emailTemplate       = null;
 
+    @Parameter (
+        names = "--hostname",
+        description = "The hostname of the email server to send from",
+        required = true )
+    private String                         hostName            = "smtp.office365.com";
+
+    @Parameter (
+        names =
+    { "-p", "--port" },
+        description = "The SMTP port for the given hostname",
+        required = true )
+    private int                            smtpPort            = 567;
+
+    @Parameter (
+        names =
+    { "-f", "--from" },
+        description = "The email to send from",
+        required = true )
+    private String                         fromEmail;
+
+    @Parameter ( names = { "-p", "--password" }, description = "The password to login with" )
+    private String                         password            = null;
+
+    @Parameter (
+        names = "--ask-password",
+        description = "The password to the sender's email",
+        password = true )
+    private String                         askPass;
+
     @Parameter ( names = "--help", description = "Display this useful message", help = true )
     private boolean                        help;
 
@@ -122,7 +151,7 @@ public class AssignmentReturner implements Runnable
      * @param pdfNamingConvention
      * @param assignmentLength
      * @param previewPage
-     * @param sendEmails
+     * @param emailTemplate
      * @throws IOException
      */
     public AssignmentReturner(
@@ -134,7 +163,11 @@ public class AssignmentReturner implements Runnable
         String pdfNamingConvention,
         int assignmentLength,
         int previewPage,
-        File sendEmails ) throws IOException
+        File emailTemplate,
+        String hostName,
+        int smtpPort,
+        String fromEmail,
+        String password ) throws IOException
     {
         this.combinedAssignment = combinedAssignment;
         this.assignmentName = assignmentName;
@@ -144,7 +177,11 @@ public class AssignmentReturner implements Runnable
         this.pdfNamingConvention = pdfNamingConvention;
         this.assignmentLength = assignmentLength;
         this.previewPage = previewPage;
-        this.emailTemplate = sendEmails;
+        this.emailTemplate = emailTemplate;
+        this.hostName = hostName;
+        this.smtpPort = smtpPort;
+        this.fromEmail = fromEmail;
+        this.password = password;
     }
 
     private void init()
@@ -163,7 +200,7 @@ public class AssignmentReturner implements Runnable
             ap = new AssignmentPreviewer( roster, outputDirectory, assignmentName );
 
             if ( emailTemplate != null )
-                ae = new AssignmentEmailer( ari, emailTemplate );
+                ae = new AssignmentEmailer( ari, emailTemplate, hostName, smtpPort, fromEmail );
 
         } catch ( IOException e )
         {
@@ -198,7 +235,7 @@ public class AssignmentReturner implements Runnable
                  * Email students their graded assignments
                  */
                 System.out.println( "Emailing graded assignments." );
-                ae.sendEmails();
+                ae.sendEmails( password );
             } else System.out.println( "NOT emailing assignments." );
 
 
@@ -216,6 +253,7 @@ public class AssignmentReturner implements Runnable
     {
         final AssignmentReturner ar = new AssignmentReturner();
         final JCommander jcomm = new JCommander( ar );
+        ar.password = ar.password == null ? ar.askPass : ar.password;
         jcomm.setProgramName( "java -jar assignment-return.jar" );
 
         if ( ar.help )
