@@ -42,12 +42,14 @@ public class AssignmentEmailerTest
         from = "alessandro.aiezza@rochester.edu";
     }
 
-    @Test
+    @Test ( )
     public void testSendEmails() throws IOException, EmailException
     {
         ari = new AssignmentReturnerInterpolator( roster, assignment );
         ae = new AssignmentEmailer( ari, emailTemplate, hostName, 587, from );
+        ae.setDebug( true );
 
-        ae.sendEmails( String.valueOf( Password.readPassword( System.in ) ) );
+        // ae.sendEmails( String.valueOf( Password.readPassword( System.in ) ) );
+        ae.sendEmails( "fakepassword" );
     }
 }

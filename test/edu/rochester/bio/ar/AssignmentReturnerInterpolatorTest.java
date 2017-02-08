@@ -38,7 +38,7 @@ public class AssignmentReturnerInterpolatorTest
     @BeforeClass
     public static void init() throws IOException
     {
-        roster = RosterFileParser.parseRoster( "resources/20170131_roster.txt" );
+        roster = RosterFileParser.parseRoster( "test_resources/20170131_roster.txt" );
         assignment = "Quiz1";
     }
 

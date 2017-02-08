@@ -28,6 +28,9 @@ import com.google.common.io.Files;
  */
 public class AssignmentEmailer
 {
+    private final ThreadLocal<Boolean>           debugEmail = ThreadLocal
+            .withInitial( () -> false );
+
     private final Roster                         roster;
     private final AssignmentReturnerInterpolator ariEmailTemplate;
 
@@ -80,7 +83,9 @@ public class AssignmentEmailer
             attachment.setName( pdfAttachment.getName() );
 
             final MultiPartEmail email = new MultiPartEmail();
-            email.setDebug( true );
+
+            email.setDebug( debugEmail.get() );
+
             email.setHostName( hostName );
             email.setSmtpPort( smtpPort );
             email.setSSLCheckServerIdentity( true );
@@ -95,5 +100,10 @@ public class AssignmentEmailer
 
             email.send();
         }
+    }
+
+    void setDebug( final boolean value )
+    {
+        debugEmail.set( value );
     }
 }

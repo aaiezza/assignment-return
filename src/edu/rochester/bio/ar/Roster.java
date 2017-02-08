@@ -9,9 +9,6 @@ import java.util.Set;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-
 /**
  * This is the model for representing a class roster.
  * 
@@ -21,7 +18,7 @@ import javafx.beans.Observable;
  * @author Alex Aiezza
  *
  */
-public class Roster implements Observable
+public class Roster
 {
     /* Default header values */
     public static final String                   FIRST_NAME_HEADER      = "firstname";
@@ -38,8 +35,6 @@ public class Roster implements Observable
             LAST_NAME_HEADER, EMAIL_HEADER };
 
     private final Table<Integer, String, String> roster;
-
-    private InvalidationListener                 rosterController;
 
     /**
      * @param roster
@@ -67,36 +62,21 @@ public class Roster implements Observable
     public void put( final int rowNumber, final String fieldName, final String value )
     {
         roster.put( rowNumber, fieldName, value );
-        this.rosterController.invalidated( this );
     }
 
     public void remove( final int rowNumber, final String fieldName )
     {
         roster.remove( rowNumber, fieldName );
-        this.rosterController.invalidated( this );
     }
 
     public void remove( final int rowNumber )
     {
         roster.rowMap().remove( rowNumber );
-        this.rosterController.invalidated( this );
     }
 
     public static Roster create()
     {
         return new Roster( HashBasedTable.create() );
-    }
-
-    @Override
-    public void addListener( InvalidationListener listener )
-    {
-        rosterController = listener;
-    }
-
-    @Override
-    public void removeListener( InvalidationListener listener )
-    {
-        rosterController = null;
     }
 
     public Set<String> columnKeySet()
