@@ -25,8 +25,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.google.common.collect.Table;
-
 import edu.rochester.bio.ar.util.RosterFileParser;
 
 /**
@@ -37,17 +35,17 @@ import edu.rochester.bio.ar.util.RosterFileParser;
  */
 public class AssignmentSplitterTest
 {
-    public static String                         message;
-    public static Table<Integer, String, String> roster;
-    public static String                         assignment;
+    public static String                  message;
+    public static Roster                  roster;
+    public static String                  assignment;
 
-    public PDDocument                            combinedAssignment;
+    public PDDocument                     combinedAssignment;
     @Rule
-    public TemporaryFolder                       tmpFolder;
-    public File                                  outputDirectory;
+    public TemporaryFolder                tmpFolder;
+    public File                           outputDirectory;
 
-    public AssignmentSplitter                    aspl;
-    public AssignmentReturnerInterpolator        ari;
+    public AssignmentSplitter             aspl;
+    public AssignmentReturnerInterpolator ari;
 
     @BeforeClass
     public static void initClass() throws IOException
@@ -79,8 +77,7 @@ public class AssignmentSplitterTest
             AssignmentSplitterTest.roster.rowMap() );
         doReturn( mockedRosterSize ).when( rosterRowMap ).size();
 
-        @SuppressWarnings ( "unchecked" )
-        Table<Integer, String, String> roster = mock( Table.class );
+        Roster roster = mock( Roster.class );
         /*
          * I'd like to know why this line does not work... I suppose it is not
          * that important since there are no other methods being called on
@@ -91,8 +88,7 @@ public class AssignmentSplitterTest
          * So long as rowMap() is being mocked by the above spy implementation
          * to lie about the length of the roster list for the sake of the test.
          * 
-         * Table<Integer, String, String> roster = spy(
-         * AssignmentSplitterTest.roster );
+         * Roster roster = spy( AssignmentSplitterTest.roster );
          */
         doReturn( rosterRowMap ).when( roster ).rowMap();
 

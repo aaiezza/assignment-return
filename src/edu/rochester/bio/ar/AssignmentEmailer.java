@@ -3,10 +3,10 @@
  */
 package edu.rochester.bio.ar;
 
-import static edu.rochester.bio.ar.util.RosterFileParser.EMAIL_HEADER;
-import static edu.rochester.bio.ar.util.RosterFileParser.FIRST_NAME_HEADER;
-import static edu.rochester.bio.ar.util.RosterFileParser.LAST_NAME_HEADER;
-import static edu.rochester.bio.ar.util.RosterFileParser.PDF_PATH_COLUMN;
+import static edu.rochester.bio.ar.Roster.EMAIL_HEADER;
+import static edu.rochester.bio.ar.Roster.FIRST_NAME_HEADER;
+import static edu.rochester.bio.ar.Roster.LAST_NAME_HEADER;
+import static edu.rochester.bio.ar.Roster.PDF_PATH_COLUMN;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,6 @@ import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 
-import com.google.common.collect.Table;
 import com.google.common.io.Files;
 
 /**
@@ -29,7 +28,7 @@ import com.google.common.io.Files;
  */
 public class AssignmentEmailer
 {
-    private final Table<Integer, String, String> roster;
+    private final Roster                         roster;
     private final AssignmentReturnerInterpolator ariEmailTemplate;
 
     private final String                         subjectMessage;

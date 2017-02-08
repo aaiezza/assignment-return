@@ -3,7 +3,7 @@
  */
 package edu.rochester.bio.ar;
 
-import static edu.rochester.bio.ar.util.RosterFileParser.PDF_PATH_COLUMN;
+import static edu.rochester.bio.ar.Roster.PDF_PATH_COLUMN;
 
 import java.io.File;
 import java.io.IOException;

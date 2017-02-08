@@ -16,7 +16,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.converters.FileConverter;
 import com.beust.jcommander.validators.PositiveInteger;
-import com.google.common.collect.Table;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import edu.rochester.bio.ar.preview.AssignmentPreviewer;
@@ -54,7 +53,7 @@ public class AssignmentReturner implements Runnable
         required = true )
     private File                           rosterFile;
 
-    private Table<Integer, String, String> roster;
+    private Roster                         roster;
 
     @Parameter (
         names =

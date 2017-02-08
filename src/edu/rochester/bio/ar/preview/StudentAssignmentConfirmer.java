@@ -5,9 +5,7 @@ package edu.rochester.bio.ar.preview;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.JPanel;
-
-import com.google.common.collect.Table;
+import edu.rochester.bio.ar.Roster;
 
 /**
  * @author Alex Aiezza
@@ -19,20 +17,19 @@ import com.google.common.collect.Table;
  */
 public class StudentAssignmentConfirmer
 {
-    private static final long                    serialVersionUID = 1L;
-    private final Table<Integer, String, String> roster;
+    private final Roster        roster;
 
 
     /**
      * This integer is the current index of the roster for the student that is
      * being confirmed to he linked to the currently displayed PDF
      */
-    private final AtomicInteger                  confirmingStudent;
+    private final AtomicInteger confirmingStudent;
 
     /**
      * 
      */
-    public StudentAssignmentConfirmer( final Table<Integer, String, String> roster )
+    public StudentAssignmentConfirmer( final Roster roster )
     {
         this.roster = roster;
         confirmingStudent = new AtomicInteger();

@@ -11,7 +11,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import com.google.common.collect.Table;
+import edu.rochester.bio.ar.Roster;
 
 /**
  * TODO Will have some form of JFrame to show assignments.
@@ -21,21 +21,19 @@ import com.google.common.collect.Table;
  */
 public class AssignmentPreviewer extends JFrame
 {
-    private static final long                    serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    private final Table<Integer, String, String> roster;
-    private final File                           pdfDirectory;
-    private final String                         assignment;
+    private final Roster      roster;
+    private final File        pdfDirectory;
+    private final String      assignment;
 
     /**
      * @param roster
      * @param pdfDirectory
      * @throws HeadlessException
      */
-    public AssignmentPreviewer(
-        Table<Integer, String, String> roster,
-        File pdfDirectory,
-        String assignment ) throws HeadlessException
+    public AssignmentPreviewer( Roster roster, File pdfDirectory, String assignment )
+        throws HeadlessException
     {
         super();
         this.roster = roster;

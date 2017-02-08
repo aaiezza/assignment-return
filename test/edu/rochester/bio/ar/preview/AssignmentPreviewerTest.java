@@ -9,17 +9,16 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.common.collect.Table;
-
+import edu.rochester.bio.ar.Roster;
 import edu.rochester.bio.ar.util.RosterFileParser;
 
 public class AssignmentPreviewerTest
 {
-    public static Table<Integer, String, String> roster;
-    public static File                           pdfDirectory;
-    public static String                         assignment;
+    public static Roster       roster;
+    public static File         pdfDirectory;
+    public static String       assignment;
 
-    public AssignmentPreviewer                   ap;
+    public AssignmentPreviewer ap;
 
     @BeforeClass
     public static void init() throws IOException

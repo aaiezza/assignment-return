@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Table;
 
 /**
  * <style> td{padding: 4px;} td:first-child{text-align:center;} </style>
@@ -60,10 +59,10 @@ import com.google.common.collect.Table;
  */
 public class AssignmentReturnerInterpolator
 {
-    public static final String                   START_VARIABLE_DELIMITER = "\\{\\{";
-    public static final String                   END_VARIABLE_DELIMITER   = "\\}\\}";
+    public static final String  START_VARIABLE_DELIMITER = "\\{\\{";
+    public static final String  END_VARIABLE_DELIMITER   = "\\}\\}";
 
-    public static final String                   DEFUALT_MESSAGE          = "{{#}}_{{lastname}}-{{firstname}}_{{ASSIGNMENT}}";
+    public static final String  DEFUALT_MESSAGE          = "{{#}}_{{lastname}}-{{firstname}}_{{ASSIGNMENT}}";
 
     /* The VariableField Interpolators */
 
@@ -88,9 +87,9 @@ public class AssignmentReturnerInterpolator
     private final VariableField                  tableHeaderVariable;
     // @formatter:on
 
-    private final String                         assignment;
-    private String                               message;
-    private final Table<Integer, String, String> roster;
+    private final String        assignment;
+    private String              message;
+    private final Roster        roster;
 
     /**
      * @param roster
@@ -98,9 +97,7 @@ public class AssignmentReturnerInterpolator
      * @param assignment
      *            Name of the assignment that is being interpolated for.
      */
-    public AssignmentReturnerInterpolator(
-        Table<Integer, String, String> roster,
-        String assignment )
+    public AssignmentReturnerInterpolator( Roster roster, String assignment )
     {
         this( DEFUALT_MESSAGE, roster, assignment );
     }
@@ -113,10 +110,7 @@ public class AssignmentReturnerInterpolator
      * @param assignment
      *            Name of the assignment that is being interpolated for.
      */
-    public AssignmentReturnerInterpolator(
-        String message,
-        Table<Integer, String, String> roster,
-        String assignment )
+    public AssignmentReturnerInterpolator( String message, Roster roster, String assignment )
     {
         super();
         this.roster = roster;
@@ -178,7 +172,7 @@ public class AssignmentReturnerInterpolator
                 .toString();
     }
 
-    public Table<Integer, String, String> getRoster()
+    public Roster getRoster()
     {
         return roster;
     }

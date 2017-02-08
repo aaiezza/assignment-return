@@ -10,8 +10,6 @@ import org.apache.commons.mail.EmailException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.common.collect.Table;
-
 import edu.rochester.bio.ar.util.RosterFileParser;
 import sun.security.util.Password;
 
@@ -21,16 +19,16 @@ import sun.security.util.Password;
  */
 public class AssignmentEmailerTest
 {
-    public static File                           emailTemplate;
-    public static Table<Integer, String, String> roster;
-    public static String                         assignment;
+    public static File                    emailTemplate;
+    public static Roster                  roster;
+    public static String                  assignment;
 
-    public static String                         hostName, from;
+    public static String                  hostName, from;
 
-    public File                                  outputDirectory;
+    public File                           outputDirectory;
 
-    public AssignmentEmailer                     ae;
-    public AssignmentReturnerInterpolator        ari;
+    public AssignmentEmailer              ae;
+    public AssignmentReturnerInterpolator ari;
 
     @BeforeClass
     public static void initClass() throws IOException

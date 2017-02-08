@@ -10,8 +10,7 @@ import java.nio.charset.Charset;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import edu.rochester.bio.ar.Roster;
 
 /**
  * @author Alex Aiezza
@@ -19,43 +18,29 @@ import com.google.common.collect.Table;
  */
 public class RosterFileParser
 {
-    /* Default header values */
-    public static final String FIRST_NAME_HEADER        = "firstname";
-
-    public static final String LAST_NAME_HEADER         = "lastname";
-
-    public static final String EMAIL_HEADER             = "email";
-
-    /* Header values that are added and used internally */
-    public static final String PDF_PATH_COLUMN          = "pdflocation";
-
     /* Roster file delimiter */
-    public static final char   DEFAULT_ROSTER_DELIMITER = '\t';
+    public static final char DEFAULT_ROSTER_DELIMITER = '\t';
 
-    public static Table<Integer, String, String> parseRoster( final String rosterFile )
-            throws IOException
+    public static Roster parseRoster( final String rosterFile ) throws IOException
     {
         return parseRoster( rosterFile, DEFAULT_ROSTER_DELIMITER );
     }
 
-    public static Table<Integer, String, String> parseRoster(
-            final String rosterFile,
-            final char delimiter ) throws IOException
+    public static Roster parseRoster( final String rosterFile, final char delimiter )
+            throws IOException
     {
         return parseRoster( new File( rosterFile ), delimiter );
     }
 
-    public static Table<Integer, String, String> parseRoster( final File rosterFile )
-            throws IOException
+    public static Roster parseRoster( final File rosterFile ) throws IOException
     {
         return parseRoster( rosterFile, DEFAULT_ROSTER_DELIMITER );
     }
 
-    public static Table<Integer, String, String> parseRoster(
-            final File rosterFile,
-            final char delimiter ) throws IOException
+    public static Roster parseRoster( final File rosterFile, final char delimiter )
+            throws IOException
     {
-        final Table<Integer, String, String> roster = HashBasedTable.create();
+        final Roster roster = Roster.create();
 
         final CSVParser rosterParser = CSVParser.parse( rosterFile, Charset.defaultCharset(),
             CSVFormat.newFormat( delimiter ).withHeader() );
