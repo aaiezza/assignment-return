@@ -39,17 +39,17 @@ public class AssignmentEmailerTest
         emailTemplate = new File( "test_resources/template.txt" );
 
         hostName = "smtp.office365.com";
-        from = "alessandro.aiezza@rochester.edu";
+        from = "aaiezza@ur.rochester.edu";
     }
 
-    @Test ( )
+    @Test
     public void testSendEmails() throws IOException, EmailException
     {
         ari = new AssignmentReturnerInterpolator( roster, assignment );
         ae = new AssignmentEmailer( ari, emailTemplate, hostName, 587, from );
         ae.setDebug( true );
 
-        // ae.sendEmails( String.valueOf( Password.readPassword( System.in ) ) );
-        ae.sendEmails( "fakepassword" );
+        System.out.printf( "[JUnit | %s]\n    Password for (%s): ", getClass().getName(), from );
+        ae.sendEmails( String.valueOf( Password.readPassword( System.in, true ) ) );
     }
 }

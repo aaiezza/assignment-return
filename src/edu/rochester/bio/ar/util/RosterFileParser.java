@@ -43,7 +43,7 @@ public class RosterFileParser
         final Roster roster = Roster.create();
 
         final CSVParser rosterParser = CSVParser.parse( rosterFile, Charset.defaultCharset(),
-            CSVFormat.newFormat( delimiter ).withHeader() );
+            CSVFormat.newFormat( delimiter ).withHeader().withIgnoreEmptyLines() );
 
         rosterParser.forEach( row -> {
             for ( int v = 0; v < row.size(); v++ )

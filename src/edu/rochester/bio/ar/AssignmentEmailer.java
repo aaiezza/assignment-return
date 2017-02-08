@@ -72,30 +72,30 @@ public class AssignmentEmailer
             final String subject = subjectLines.get( i );
             final String body = emailBodies.get( i );
             final File pdfAttachment = new File( roster.get( r, PDF_PATH_COLUMN ) );
+            final String studentName = String.format( "%s %s", roster.get( r, FIRST_NAME_HEADER ),
+                roster.get( r, LAST_NAME_HEADER ) );
 
             final String to = roster.get( r, EMAIL_HEADER );
 
-            // Build email and send it out!
+            // Build attachment
             final EmailAttachment attachment = new EmailAttachment();
             attachment.setPath( pdfAttachment.getAbsolutePath() );
             attachment.setDisposition( EmailAttachment.ATTACHMENT );
             attachment.setDescription( "Graded assignment: " + ariEmailTemplate.getAssignment() );
             attachment.setName( pdfAttachment.getName() );
 
+            // Build email and send it out!
             final MultiPartEmail email = new MultiPartEmail();
 
             email.setDebug( debugEmail.get() );
 
             email.setHostName( hostName );
             email.setSmtpPort( smtpPort );
+            email.setAuthenticator( new DefaultAuthenticator( fromEmail, password ) );
             email.setSSLCheckServerIdentity( true );
             email.setStartTLSRequired( true );
-            email.setAuthenticator( new DefaultAuthenticator( fromEmail, password ) );
-            email.addTo( to, String.format( "%s %s", roster.get( r, FIRST_NAME_HEADER ),
-                roster.get( r, LAST_NAME_HEADER ) ) );
-            email.setFrom( fromEmail );
-            email.setSubject( subject );
-            email.setMsg( body );
+            email.addTo( to, studentName ).setFrom( fromEmail ).setSubject( subject )
+                    .setMsg( body );
             email.attach( attachment );
 
             email.send();
