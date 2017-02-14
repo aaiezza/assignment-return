@@ -18,7 +18,6 @@ import com.beust.jcommander.converters.FileConverter;
 import com.beust.jcommander.validators.PositiveInteger;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import edu.rochester.bio.ar.preview.AssignmentPreviewer;
 import edu.rochester.bio.ar.util.RosterFileParser;
 
 /**
@@ -32,8 +31,6 @@ public class AssignmentReturner implements Runnable
     private AssignmentReturnerInterpolator ari;
 
     private AssignmentSplitter             as;
-
-    private AssignmentPreviewer            ap;
 
     private AssignmentEmailer              ae;
 
@@ -89,6 +86,7 @@ public class AssignmentReturner implements Runnable
         hidden = true )
     private int                            assignmentLength;
 
+    @Deprecated
     @Parameter (
         names = "--preview-page",
         description = "Override the number of pages of an individual assignment. (Used when splitting)",
@@ -196,7 +194,8 @@ public class AssignmentReturner implements Runnable
             as = new AssignmentSplitter( PDDocument.load( combinedAssignment ), outputDirectory,
                     ari );
 
-            ap = new AssignmentPreviewer( roster, outputDirectory, assignmentName );
+            // ap = new AssignmentPreviewer( roster, outputDirectory,
+            // assignmentName );
 
             if ( emailTemplate != null )
                 ae = new AssignmentEmailer( ari, emailTemplate, hostName, smtpPort, fromEmail );
@@ -224,8 +223,8 @@ public class AssignmentReturner implements Runnable
             /*
              * Preview to ensure assignment correctness
              */
-            System.out.println( "Previewing files." );
-            ap.preview();
+            // System.out.println( "Previewing files." );
+            // ap.preview();
 
 
             if ( emailTemplate != null )
