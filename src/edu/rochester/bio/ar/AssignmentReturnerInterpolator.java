@@ -82,7 +82,7 @@ public class AssignmentReturnerInterpolator
     } );
     
     private final VariableField                  assignmentVariable       = new VariableField(
-            "^ASSIGNMENT", ( f, e ) -> this.assignment );
+            "^ASSIGNMENT", ( f, e ) -> getAssignment() );
 
     private final VariableField                  tableHeaderVariable;
     // @formatter:on
