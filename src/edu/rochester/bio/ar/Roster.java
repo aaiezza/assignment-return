@@ -36,6 +36,11 @@ public class Roster
 
     private final Table<Integer, String, String> roster;
 
+    public Roster()
+    {
+        this( HashBasedTable.create() );
+    }
+
     /**
      * @param roster
      */
