@@ -3,6 +3,8 @@
  */
 package edu.rochester.bio.ar;
 
+import static java.util.Arrays.asList;
+
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Date;
@@ -145,7 +147,7 @@ public class AssignmentReturnerInterpolator
     Stream<Entry<String, Boolean>> getMessageComponents()
     {
         final List<String> components = Stream.of( message.split( START_VARIABLE_DELIMITER ) )
-                .flatMap( s -> Stream.of( s.split( END_VARIABLE_DELIMITER ) ) )
+                .flatMap( s -> asList( s.split( END_VARIABLE_DELIMITER ) ).stream() )
                 .collect( Collectors.toList() );
 
         assert ( components.size() > 0 );
@@ -165,9 +167,8 @@ public class AssignmentReturnerInterpolator
 
     private <E extends Entry<Integer, Map<String, String>>> String interpolateUsing( final E row )
     {
-        return getMessageComponents()
-                .map( e -> e.getValue() ? match( e.getKey() ).get().apply( e.getKey(), row )
-                                        : e.getKey() )
+        return getMessageComponents().map(
+            e -> e.getValue() ? match( e.getKey() ).get().apply( e.getKey(), row ) : e.getKey() )
                 .collect( StringBuilder::new, StringBuilder::append, StringBuilder::append )
                 .toString();
     }
