@@ -3,11 +3,13 @@
  */
 package edu.rochester.bio.ar;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeBasedTable;
 
 /**
@@ -22,32 +24,28 @@ import com.google.common.collect.TreeBasedTable;
 public class Roster
 {
     /* Default header values */
-    public static final String                   FIRST_NAME_HEADER      = "firstname";
+    public static final String                            FIRST_NAME_HEADER      = "firstname";
 
-    public static final String                   LAST_NAME_HEADER       = "lastname";
+    public static final String                            LAST_NAME_HEADER       = "lastname";
 
-    public static final String                   EMAIL_HEADER           = "email";
+    public static final String                            EMAIL_HEADER           = "email";
 
     /* Header values that are added and used internally */
-    public static final String                   PDF_PATH_COLUMN        = "pdflocation";
+    public static final String                            PDF_PATH_COLUMN        = "pdflocation";
 
     /* Required fields */
-    public static final String []                REQUIRED_ROSTER_FIELDS = { FIRST_NAME_HEADER,
-            LAST_NAME_HEADER, EMAIL_HEADER };
+    public static final String []                         REQUIRED_ROSTER_FIELDS = {
+            FIRST_NAME_HEADER, LAST_NAME_HEADER, EMAIL_HEADER };
 
-    private final Table<Integer, String, String> roster;
+    private final TreeBasedTable<Integer, String, String> roster;
+
+    private final List<String>                            headers                = Lists
+            .newArrayList();
 
     public Roster()
     {
-        this( TreeBasedTable.create() );
-    }
-
-    /**
-     * @param roster
-     */
-    private Roster( Table<Integer, String, String> roster )
-    {
-        this.roster = roster;
+        roster = TreeBasedTable.create( Ordering.natural(),
+            Ordering.from( ( o1, o2 ) -> Ordering.explicit( headers ).compare( o1, o2 ) ) );
     }
 
     public int getNumberOfRows()
@@ -60,14 +58,21 @@ public class Roster
         return roster.rowMap();
     }
 
+    public SortedMap<String, String> getRow( final int rowKey )
+    {
+        return roster.row( rowKey );
+    }
+
     public String get( final int rowNumber, final String fieldName )
     {
         return roster.get( rowNumber, fieldName );
     }
 
-    public void put( final int rowNumber, final String fieldName, final String value )
+    public String put( final int rowNumber, final String fieldName, final String value )
     {
-        roster.put( rowNumber, fieldName, value );
+        if ( !headers.contains( fieldName ) )
+            headers.add( fieldName );
+        return roster.put( rowNumber, fieldName, value );
     }
 
     public void remove( final int rowNumber, final String fieldName )
@@ -82,11 +87,26 @@ public class Roster
 
     public static Roster create()
     {
-        return new Roster( HashBasedTable.create() );
+        return new Roster();
     }
 
     public Set<String> columnKeySet()
     {
         return roster.columnKeySet();
+    }
+
+    public String [] getHeaders()
+    {
+        final String [] headers = new String [roster.columnKeySet().size()];
+        return roster.columnKeySet().toArray( headers );
+    }
+
+    public String [] [] getData()
+    {
+        final String [] [] data = new String [getNumberOfRows()] [getHeaders().length];
+        for ( int r = 0; r < data.length; r++ )
+            for ( int c = 0; c < data[r].length; c++ )
+                data[r][c] = get( r, getHeaders()[c] );
+        return data;
     }
 }
