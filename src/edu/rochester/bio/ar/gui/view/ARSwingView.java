@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * @author Alex Aiezza
@@ -39,6 +41,14 @@ public class ARSwingView extends JFrame implements Runnable
     ARSwingView()
     {
         this( new StudentAssignmentConfirmationView() );
+        try
+        {
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+        } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e )
+        {
+            e.printStackTrace();
+        }
     }
 
     public ARSwingView( final StudentAssignmentConfirmationView rosterConfirmationSplitPane )

@@ -11,7 +11,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,6 +21,7 @@ import java.util.function.Supplier;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -41,7 +44,7 @@ public abstract class ARInputsDialog extends JDialog
     public static final String              SUBMIT_AND_SPLIT_BUTTON             = "Submit";
 
     /* Default button components */
-    private final JButton                   submitAndSplitButton                = new JButton(
+    protected final JButton                 submitAndSplitButton                = new JButton(
             SUBMIT_AND_SPLIT_BUTTON );
     private static final GridBagConstraints SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS = new GridBagConstraints();
     {
@@ -52,8 +55,6 @@ public abstract class ARInputsDialog extends JDialog
         SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.insets = new Insets( 8, 8, 8, 8 );
         SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.SOUTH;
         SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.gridwidth = 3;
-
-        submitAndSplitButton.addActionListener( e -> this.dispose() );
     }
 
     /* Item Layout Constraints */
@@ -62,6 +63,7 @@ public abstract class ARInputsDialog extends JDialog
     public static final GridBagConstraints INPUT_FIELD_WITH_BUTTON_CONSTRAINTS = new GridBagConstraints();
     public static final GridBagConstraints BUTTON_CONSTRAINTS                  = new GridBagConstraints();
     public static final GridBagConstraints SEPARATOR_CONSTRAINTS               = new GridBagConstraints();
+    public static final GridBagConstraints SPINNER_CONSTRAINTS;
     static
     {
         LABEL_CONSTRAINTS.insets = INPUT_FIELD_CONSTRAINTS.insets = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.insets = BUTTON_CONSTRAINTS.insets = SEPARATOR_CONSTRAINTS.insets = new Insets(
@@ -85,6 +87,10 @@ public abstract class ARInputsDialog extends JDialog
         SEPARATOR_CONSTRAINTS.gridwidth = 3;
         SEPARATOR_CONSTRAINTS.gridx = 0;
         SEPARATOR_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
+
+        SPINNER_CONSTRAINTS = (GridBagConstraints) INPUT_FIELD_CONSTRAINTS.clone();
+        SPINNER_CONSTRAINTS.fill = GridBagConstraints.NONE;
+        SPINNER_CONSTRAINTS.ipadx = 8;
     }
 
     private final Map<String, Supplier<Object>> getterMap = Maps.newHashMap();
@@ -118,7 +124,6 @@ public abstract class ARInputsDialog extends JDialog
         UIManager.put( "Button.font", getFont() );
         SwingUtilities.updateComponentTreeUI( this );
         setVisible( true );
-
     }
 
     protected abstract void initDialogComponents();
@@ -145,8 +150,20 @@ public abstract class ARInputsDialog extends JDialog
         return getterMap.get( fieldKey ).get();
     }
 
+    public abstract List<JTextField> getFields();
+
     @Override
-    public abstract void addFocusListener( final FocusListener listener );
+    public void addFocusListener( final FocusListener listener )
+    {
+        getFields().forEach( f -> f.addFocusListener( listener ) );
+
+        submitAndSplitButton.addActionListener( e -> {
+
+            getFields().forEach(
+                f -> listener.focusLost( new FocusEvent( f, FocusEvent.FOCUS_LOST ) ) );
+            this.dispose();
+        } );
+    }
 
     public static ARInputsDialog getOptions( final JFrame parent, final int dialogType )
     {

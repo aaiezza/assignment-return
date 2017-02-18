@@ -3,6 +3,11 @@
  */
 package edu.rochester.bio.ar.gui.controller;
 
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.EMAIL_PASSWORD;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.EMAIL_TEMPLATE_FILE;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.FROM_EMAIL;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.HOST_NAME;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.SMTP_PORT;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.ASSIGNMENT_TITLE;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.INDIVIDUAL_PDF_OUTPUT_DIRECTORY;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.INIDIVIDUAL_PDF_NAMING_VARIABLE;
@@ -57,7 +62,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
         confirmingStudent = new AtomicInteger();
 
         sacv = new StudentAssignmentConfirmationView();
-        sacv.addEventListener( this );
+        // sacv.addEventListener( this );
     }
 
     public AssignmentReturner getAssignmentReturner()
@@ -216,6 +221,29 @@ public class StudentAssignmentConfirmationController implements ActionListener
                 break;
             case PREVIEW_PAGE:
                 ar.setPreviewPage( (int) arid.getField( PREVIEW_PAGE ) );
+                break;
+            case FROM_EMAIL:
+                ar.setFromEmail( (String) arid.getField( FROM_EMAIL ) );
+                break;
+            case EMAIL_PASSWORD:
+                ar.setPassword( String.valueOf( (char []) arid.getField( EMAIL_PASSWORD ) ) );
+                break;
+            case EMAIL_TEMPLATE_FILE:
+                try
+                {
+                    ar.setEmailTemplate(
+                        new File( (String) arid.getField( EMAIL_TEMPLATE_FILE ) ) );
+                } catch ( final IOException ex )
+                {
+                    JOptionPane.showMessageDialog( arid, ex.getMessage(), "Email Template Error",
+                        JOptionPane.ERROR_MESSAGE );
+                }
+                break;
+            case HOST_NAME:
+                ar.setHostName( (String) arid.getField( HOST_NAME ) );
+                break;
+            case SMTP_PORT:
+                ar.setSmtpPort( (int) arid.getField( SMTP_PORT ) );
                 break;
             }
         };

@@ -3,9 +3,9 @@
  */
 package edu.rochester.bio.ar.gui.view.dialogs;
 
-import java.awt.GridBagConstraints;
-import java.awt.event.FocusListener;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -46,8 +46,6 @@ public class MainInputsDialog extends ARInputsDialog
     JTextField                 indPdfNamingVariable;
 
     JSpinner                   previewPage;
-
-    /* Make and populate form map */
 
     MainInputsDialog( final JFrame parent )
     {
@@ -117,7 +115,7 @@ public class MainInputsDialog extends ARInputsDialog
         indPdfNamingVariable.setName( INIDIVIDUAL_PDF_NAMING_VARIABLE );
 
         previewPage = new JSpinner();
-        previewPage.setName( PREVIEW_PAGE );
+        ( (JSpinner.DefaultEditor) previewPage.getEditor() ).getTextField().setName( PREVIEW_PAGE );
 
         addComponents();
     }
@@ -153,25 +151,17 @@ public class MainInputsDialog extends ARInputsDialog
         add( new JSeparator( JSeparator.HORIZONTAL ), SEPARATOR_CONSTRAINTS );
 
         add( new JLabel( PREVIEW_PAGE ), LABEL_CONSTRAINTS );
-        GridBagConstraints previewPageConstraints = (GridBagConstraints) INPUT_FIELD_CONSTRAINTS
-                .clone();
-        previewPageConstraints.fill = GridBagConstraints.NONE;
-        previewPageConstraints.ipadx = 8;
         JSpinner.DefaultEditor ppe = ( (JSpinner.DefaultEditor) previewPage.getEditor() );
-        add( PREVIEW_PAGE, previewPage, previewPageConstraints, previewPage::getValue,
+        add( PREVIEW_PAGE, previewPage, SPINNER_CONSTRAINTS, previewPage::getValue,
             t -> previewPage.setValue( (int) t ) );
         ppe.getTextField().setHorizontalAlignment( JTextField.CENTER );
     }
 
     @Override
-    public void addFocusListener( final FocusListener listener )
+    public List<JTextField> getFields()
     {
-        assignmentTitle.addFocusListener( listener );
-        rosterFile.addFocusListener( listener );
-        combinedPdf.addFocusListener( listener );
-        indPdfOutputDirectory.addFocusListener( listener );
-        indPdfNamingVariable.addFocusListener( listener );
-        ( (JSpinner.DefaultEditor) previewPage.getEditor() ).getTextField()
-                .addFocusListener( listener );
+        return Arrays.asList( assignmentTitle, rosterFile, combinedPdf, indPdfOutputDirectory,
+            indPdfNamingVariable,
+            ( (JSpinner.DefaultEditor) previewPage.getEditor() ).getTextField() );
     }
 }

@@ -3,7 +3,13 @@
  */
 package edu.rochester.bio.ar.gui.controller;
 
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.EMAIL_PASSWORD;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.EMAIL_TEMPLATE_FILE;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.FROM_EMAIL;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.HOST_NAME;
+import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.SMTP_PORT;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.ASSIGNMENT_TITLE;
+import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.COMBINED_PDF;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.INDIVIDUAL_PDF_OUTPUT_DIRECTORY;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.INIDIVIDUAL_PDF_NAMING_VARIABLE;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.PREVIEW_PAGE;
@@ -11,6 +17,9 @@ import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.ROSTER_FILE
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Optional;
+
+import org.apache.commons.io.FileUtils;
 
 import edu.rochester.bio.ar.AssignmentReturner;
 import edu.rochester.bio.ar.gui.view.ARSwingView;
@@ -57,7 +66,14 @@ public class ARSwingController implements ActionListener
                 // Populate view with defaults
                 {
                     mainInputsDialog.setField( ASSIGNMENT_TITLE, ar.getAssignmentName() );
-                    mainInputsDialog.setField( ROSTER_FILE, ar.getRosterFile() );
+                    mainInputsDialog.setField( ROSTER_FILE,
+                        Optional.ofNullable( ar.getRosterFile() )
+                                .orElse( FileUtils.getFile( System.getProperty( "user.dir" ) ) )
+                                .getAbsolutePath() );
+                    mainInputsDialog.setField( COMBINED_PDF,
+                        Optional.ofNullable( ar.getCombinedAssignment() )
+                                .orElse( FileUtils.getFile( System.getProperty( "user.dir" ) ) )
+                                .getAbsolutePath() );
                     mainInputsDialog.setField( INDIVIDUAL_PDF_OUTPUT_DIRECTORY,
                         ar.getOutputDirectory().getAbsolutePath() );
                     mainInputsDialog.setField( INIDIVIDUAL_PDF_NAMING_VARIABLE,
@@ -75,7 +91,14 @@ public class ARSwingController implements ActionListener
                     ARInputsDialog.EMAIL_INPUTS_DIALOG );
                 // Populate view with defaults
                 {
-                    emailInputsDialog.setField( "", "" );
+                    emailInputsDialog.setField( FROM_EMAIL, ar.getFromEmail() );
+                    emailInputsDialog.setField( EMAIL_PASSWORD, ar.getPassword() );
+                    emailInputsDialog.setField( EMAIL_TEMPLATE_FILE,
+                        Optional.ofNullable( ar.getEmailTemplate() )
+                                .orElse( FileUtils.getFile( System.getProperty( "user.dir" ) ) )
+                                .getAbsolutePath() );
+                    emailInputsDialog.setField( HOST_NAME, ar.getHostName() );
+                    emailInputsDialog.setField( SMTP_PORT, ar.getSmtpPort() );
                 }
 
                 // On submission, retrieve new values for model

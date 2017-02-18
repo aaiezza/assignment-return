@@ -29,9 +29,11 @@ import edu.rochester.bio.ar.util.RosterFileParser;
 public class AssignmentReturner implements Runnable
 {
     /* Error Messages */
-    private static final String            ROSTER_FILE_NOT_FOUND_EXCEPTION_FORMAT = "The given roster file '%s' does not exist.";
+    private static final String            ROSTER_FILE_NOT_FOUND_EXCEPTION_FORMAT         = "The given roster file '%s' does not exist.";
 
-    private static final String            OUTPUT_DIRECTORY_EXCEPTION_FORMAT      = "The given output directory for the individual PDFs could not be found or created, '%s'.";
+    private static final String            OUTPUT_DIRECTORY_EXCEPTION_FORMAT              = "The given output directory for the individual PDFs could not be found or created, '%s'.";
+
+    private static final String            EMAIL_TEMPLATE_FILE_NOT_FOUND_EXCEPTION_FORMAT = "The given email template file '%s' does not exist.";
 
     /* Components for Running */
 
@@ -47,7 +49,8 @@ public class AssignmentReturner implements Runnable
         description = "/path/to/combinedAssignment.pdf",
         converter = FileConverter.class,
         required = true )
-    private File                           combinedAssignment;
+    private File                           combinedAssignment                             = new File(
+            String.format( "%s/%s", System.getProperty( "user.dir" ), "combinedAssignment.pdf" ) );
 
     @Parameter (
         names =
@@ -55,16 +58,17 @@ public class AssignmentReturner implements Runnable
         description = "Student roster",
         converter = FileConverter.class,
         required = true )
-    private File                           rosterFile;
+    private File                           rosterFile                                     = new File(
+            String.format( "%s/%s", System.getProperty( "user.dir" ), "roster.txt" ) );
 
-    private Roster                         roster                                 = new Roster();
+    private Roster                         roster                                         = new Roster();
 
     @Parameter (
         names =
     { "-a", "--assignment" },
         description = "The title of the assignment to be returned",
         required = true )
-    private String                         assignmentName                         = "Assignment_1";
+    private String                         assignmentName                                 = "Assignment_1";
 
     @Parameter (
         names =
@@ -77,13 +81,13 @@ public class AssignmentReturner implements Runnable
     { "-o", "--pdf-output" },
         description = "Output directory for the indidvidual PDF assignment files",
         converter = FileConverter.class )
-    private File                           outputDirectory                        = new File(
+    private File                           outputDirectory                                = new File(
             String.format( "%s/%s", System.getProperty( "user.dir" ), getAssignmentName() ) );
 
     @Parameter (
         names = "--pdf-naming",
         description = "The naming convention to use when generating the individual PDF assignment files" )
-    private String                         pdfNamingConvention                    = AssignmentReturnerInterpolator.DEFUALT_MESSAGE;
+    private String                         pdfNamingConvention                            = AssignmentReturnerInterpolator.DEFUALT_MESSAGE;
 
     @Deprecated
     @Parameter (
@@ -99,27 +103,27 @@ public class AssignmentReturner implements Runnable
         description = "Override the number of pages of an individual assignment. (Used when splitting)",
         validateWith = PositiveInteger.class,
         hidden = true )
-    private int                            previewPage                            = 1;
+    private int                            previewPage                                    = 1;
 
     @Parameter (
         names =
     { "-e", "--email" },
         description = "If this option is used, the confirmed PDFs will be sent to their corresponding users as an attachment to an email. That email's contents are to be defined in the file that is given with this option. The first line of that file will be the subject of the email.",
         converter = FileConverter.class )
-    private File                           emailTemplate                          = null;
+    private File                           emailTemplate                                  = null;
 
     @Parameter (
         names = "--hostname",
         description = "The hostname of the email server to send from",
         required = true )
-    private String                         hostName                               = "smtp.office365.com";
+    private String                         hostName                                       = "smtp.office365.com";
 
     @Parameter (
         names =
     { "-p", "--port" },
         description = "The SMTP port for the given hostname",
         required = true )
-    private int                            smtpPort                               = 567;
+    private int                            smtpPort                                       = 567;
 
     @Parameter (
         names =
@@ -129,7 +133,7 @@ public class AssignmentReturner implements Runnable
     private String                         fromEmail;
 
     @Parameter ( names = { "-p", "--password" }, description = "The password to login with" )
-    private String                         password                               = null;
+    private String                         password                                       = null;
 
     @Parameter (
         names = "--ask-password",
@@ -365,10 +369,11 @@ public class AssignmentReturner implements Runnable
             try
             {
                 Files.createParentDirs( outputDirectory );
+                outputDirectory.delete();
             } catch ( IOException e )
             {
                 throw new IOException( String.format( OUTPUT_DIRECTORY_EXCEPTION_FORMAT,
-                    rosterFile.getAbsolutePath() ) );
+                    outputDirectory.getAbsolutePath() ) );
             }
         this.outputDirectory = outputDirectory;
     }
@@ -418,9 +423,13 @@ public class AssignmentReturner implements Runnable
     /**
      * @param emailTemplate
      *            the emailTemplate to set
+     * @throws IOException
      */
-    public void setEmailTemplate( File emailTemplate )
+    public void setEmailTemplate( File emailTemplate ) throws IOException
     {
+        if ( !emailTemplate.exists() )
+            throw new IOException( String.format( EMAIL_TEMPLATE_FILE_NOT_FOUND_EXCEPTION_FORMAT,
+                emailTemplate.getAbsolutePath() ) );
         this.emailTemplate = emailTemplate;
     }
 
