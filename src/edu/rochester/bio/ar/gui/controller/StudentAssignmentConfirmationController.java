@@ -51,17 +51,21 @@ public class StudentAssignmentConfirmationController implements ActionListener
 
     private final AssignmentReturner                ar;
 
+    private final ARSwingController                 arsc;
+
     private final StudentAssignmentConfirmationView sacv;
 
     /**
      * 
      */
-    public StudentAssignmentConfirmationController()
+    public StudentAssignmentConfirmationController( ARSwingController arsc )
     {
+        this.arsc = arsc;
         ar = new AssignmentReturner();
         confirmingStudent = new AtomicInteger();
 
         sacv = new StudentAssignmentConfirmationView();
+        sacv.setTableModel( getRosterTableModel() );
         // sacv.addEventListener( this );
     }
 
@@ -193,11 +197,14 @@ public class StudentAssignmentConfirmationController implements ActionListener
                     ipod.getText().substring( 0,
                         ipod.getText().lastIndexOf( System.getProperty( "file.separator" ) ) ),
                     System.getProperty( "file.separator" ), ar.getAssignmentName() ) );
+                arsc.getARSwingView().setTitle( ar.getAssignmentName() );
                 break;
             case ROSTER_FILE:
                 try
                 {
                     ar.setRosterFile( new File( (String) arid.getField( ROSTER_FILE ) ) );
+                    sacv.getRosterView()
+                            .setCurrentRosterLabel( ar.getRosterFile().getAbsolutePath() );
                 } catch ( final FileNotFoundException ex )
                 {
                     JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",

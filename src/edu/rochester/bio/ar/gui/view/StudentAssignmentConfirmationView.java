@@ -12,6 +12,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.TableModel;
 
 /**
  * @author Alex Aiezza
@@ -63,5 +64,15 @@ public class StudentAssignmentConfirmationView extends JSplitPane
             rosterPanel.addEventListener( listener );
         if ( pdfViewerPanel != null )
             pdfViewerPanel.addEventListener( listener );
+    }
+
+    public RosterView getRosterView()
+    {
+        return rosterPanel;
+    }
+
+    public void setTableModel( final TableModel tableModel )
+    {
+        rosterPanel.setRosterTable( tableModel );
     }
 }

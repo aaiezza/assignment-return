@@ -37,7 +37,7 @@ public class ARSwingController implements ActionListener
 
     public ARSwingController()
     {
-        sacc = new StudentAssignmentConfirmationController();
+        sacc = new StudentAssignmentConfirmationController( this );
 
         arsv = new ARSwingView( sacc.getStudentAssignmentConfirmationView() );
         arsv.addActionListener( this );

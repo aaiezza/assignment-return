@@ -42,6 +42,8 @@ public class RosterView extends JPanel
         rosterFileToolbar.setFloatable( false );
         rosterFileToolbar.add( currentRosterLabel );
 
+        add( rosterTable, BorderLayout.CENTER );
+
         setCurrentRosterLabel( "" );
     }
 
