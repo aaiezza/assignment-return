@@ -12,18 +12,19 @@ import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.ROSTER_FILE
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import edu.rochester.bio.ar.AssignmentReturner;
 import edu.rochester.bio.ar.Roster;
@@ -35,12 +36,7 @@ import edu.rochester.bio.ar.gui.view.dialogs.FocusLostListener;
  * @author Alex Aiezza
  *
  */
-/**
- * @author Alex Aiezza
- *
- */
-public class StudentAssignmentConfirmationController
-        implements ActionListener, PropertyChangeListener
+public class StudentAssignmentConfirmationController implements ActionListener
 {
     /**
      * This integer is the current index of the roster for the student that is
@@ -101,17 +97,67 @@ public class StudentAssignmentConfirmationController
     }
 
     @Override
-    public void propertyChange( final PropertyChangeEvent evt )
+    public void actionPerformed( final ActionEvent evt )
     {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
-    public void actionPerformed( final ActionEvent evt )
+    @SuppressWarnings ( "serial" )
+    TableModel getRosterTableModel()
     {
-        // TODO Auto-generated method stub
+        return new AbstractTableModel()
+        {
+            private final Roster roster = ar.getRoster();
+            {
+                addTableModelListener( tce -> {} );
+            }
 
+            @Override
+            public int getRowCount()
+            {
+                return roster.getNumberOfRows();
+            }
+
+            @Override
+            public int getColumnCount()
+            {
+                return roster.columnKeySet().size();
+            }
+
+            @Override
+            public String getColumnName( int column )
+            {
+                return roster.columnKeySet().stream().skip( column ).findFirst().get();
+            }
+
+            @Override
+            public int findColumn( final String columnName )
+            {
+                final AtomicInteger col = new AtomicInteger();
+                final AtomicBoolean found = new AtomicBoolean();
+                roster.columnKeySet().stream().forEach( c -> {
+                    if ( !c.equals( columnName ) )
+                    {
+                        if ( !found.get() )
+                            col.incrementAndGet();
+                    } else found.set( true );
+                } );
+                return col.get();
+            }
+
+            @Override
+            public Class<?> getColumnClass( int columnIndex )
+            {
+                return String.class;
+            }
+
+            @Override
+            public Object getValueAt( int rowIndex, int columnIndex )
+            {
+                return roster.get( rowIndex, getColumnName( columnIndex ) );
+            }
+        };
     }
 
     FocusLostListener getARupdater( final ARInputsDialog arid )
