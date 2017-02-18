@@ -13,7 +13,6 @@ import java.awt.event.FocusListener;
 @FunctionalInterface
 public interface FocusLostListener extends FocusListener
 {
-
     @Override
     default void focusGained( FocusEvent e )
     {}

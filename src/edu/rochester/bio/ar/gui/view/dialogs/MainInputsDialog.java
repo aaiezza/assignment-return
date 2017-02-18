@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -115,6 +116,7 @@ public class MainInputsDialog extends ARInputsDialog
         indPdfNamingVariable.setName( INIDIVIDUAL_PDF_NAMING_VARIABLE );
 
         previewPage = new JSpinner();
+        previewPage.setModel( new SpinnerNumberModel( 1, 1, 100, 1 ) );
         ( (JSpinner.DefaultEditor) previewPage.getEditor() ).getTextField().setName( PREVIEW_PAGE );
 
         addComponents();

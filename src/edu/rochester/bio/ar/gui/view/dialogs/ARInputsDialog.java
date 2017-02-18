@@ -13,6 +13,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -24,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
@@ -67,7 +70,7 @@ public abstract class ARInputsDialog extends JDialog
     static
     {
         LABEL_CONSTRAINTS.insets = INPUT_FIELD_CONSTRAINTS.insets = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.insets = BUTTON_CONSTRAINTS.insets = SEPARATOR_CONSTRAINTS.insets = new Insets(
-                8, 2, 2, 2 );
+                10, 8, 1, 8 );
 
         LABEL_CONSTRAINTS.gridx = 0;
         LABEL_CONSTRAINTS.anchor = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.EAST;
@@ -101,6 +104,7 @@ public abstract class ARInputsDialog extends JDialog
         super( parent, ModalityType.MODELESS );
         setTitle( title );
         initJDialog();
+        setLocationRelativeTo( parent );
     }
 
     private void initJDialog()
@@ -108,10 +112,10 @@ public abstract class ARInputsDialog extends JDialog
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setSize( dim.width * 1 / 3, dim.height * 7 / 24 );
         setMinimumSize( new Dimension( dim.width * 1 / 4, dim.height * 7 / 24 ) );
-        setLocation( dim.width / 2 - getSize().width / 2, dim.height / 2 - getSize().height / 2 );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
-        getContentPane().setBackground( new Color( 0, 230, 250 ) );
+        setUndecorated( true );
+        getContentPane().setBackground( new Color( 0, 180, 250 ) );
         setFont( new Font( "Verdana", Font.PLAIN, 12 ) );
         setLayout( new GridBagLayout() );
 
@@ -122,7 +126,15 @@ public abstract class ARInputsDialog extends JDialog
         add( submitAndSplitButton, SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS );
 
         UIManager.put( "Button.font", getFont() );
+        UIManager.put( "Label.font", getFont() );
+        try
+        {
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+        } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e )
+        {}
         SwingUtilities.updateComponentTreeUI( this );
+        getInsets().set( 10, 10, 10, 10 );
         setVisible( true );
     }
 
@@ -155,10 +167,29 @@ public abstract class ARInputsDialog extends JDialog
     @Override
     public void addFocusListener( final FocusListener listener )
     {
-        getFields().forEach( f -> f.addFocusListener( listener ) );
+        getFields().forEach( f -> {
+            f.addFocusListener( listener );
+            f.addKeyListener( new KeyListener()
+            {
+                @Override
+                public void keyTyped( KeyEvent e )
+                {
+                    if ( e.getKeyChar() == KeyEvent.VK_ENTER ||
+                            e.getKeyChar() == KeyEvent.VK_ESCAPE )
+                        submitAndSplitButton.doClick();
+                }
+
+                @Override
+                public void keyPressed( KeyEvent e )
+                {}
+
+                @Override
+                public void keyReleased( KeyEvent e )
+                {}
+            } );
+        } );
 
         submitAndSplitButton.addActionListener( e -> {
-
             getFields().forEach(
                 f -> listener.focusLost( new FocusEvent( f, FocusEvent.FOCUS_LOST ) ) );
             this.dispose();

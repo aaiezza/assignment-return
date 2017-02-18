@@ -15,6 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -82,6 +83,7 @@ public class EmailInputsDialog extends ARInputsDialog
         hostName.setName( HOST_NAME );
 
         smtpPort = new JSpinner();
+        smtpPort.setModel( new SpinnerNumberModel( 1, 1, 10000, 1 ) );
         ( (JSpinner.DefaultEditor) smtpPort.getEditor() ).getTextField().setName( SMTP_PORT );
 
         addComponents();

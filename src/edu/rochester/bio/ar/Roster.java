@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.TreeBasedTable;
 
 /**
  * This is the model for representing a class roster.
@@ -38,7 +39,7 @@ public class Roster
 
     public Roster()
     {
-        this( HashBasedTable.create() );
+        this( TreeBasedTable.create() );
     }
 
     /**
