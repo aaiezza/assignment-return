@@ -122,6 +122,27 @@ public abstract class ARInputsDialog extends JDialog
         // Hit up the subclass for the components and their layout
         initDialogComponents();
 
+        getFields().forEach( f -> {
+            f.addKeyListener( new KeyListener()
+            {
+                @Override
+                public void keyTyped( KeyEvent e )
+                {
+                    if ( e.getKeyChar() == KeyEvent.VK_ENTER ||
+                            e.getKeyChar() == KeyEvent.VK_ESCAPE )
+                        submitAndSplitButton.doClick();
+                }
+
+                @Override
+                public void keyPressed( KeyEvent e )
+                {}
+
+                @Override
+                public void keyReleased( KeyEvent e )
+                {}
+            } );
+        } );
+
         // Always a submit and cancel button
         add( submitAndSplitButton, SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS );
 
@@ -167,27 +188,7 @@ public abstract class ARInputsDialog extends JDialog
     @Override
     public void addFocusListener( final FocusListener listener )
     {
-        getFields().forEach( f -> {
-            f.addFocusListener( listener );
-            f.addKeyListener( new KeyListener()
-            {
-                @Override
-                public void keyTyped( KeyEvent e )
-                {
-                    if ( e.getKeyChar() == KeyEvent.VK_ENTER ||
-                            e.getKeyChar() == KeyEvent.VK_ESCAPE )
-                        submitAndSplitButton.doClick();
-                }
-
-                @Override
-                public void keyPressed( KeyEvent e )
-                {}
-
-                @Override
-                public void keyReleased( KeyEvent e )
-                {}
-            } );
-        } );
+        getFields().forEach( f -> f.addFocusListener( listener ) );
 
         submitAndSplitButton.addActionListener( e -> {
             getFields().forEach(
