@@ -6,6 +6,7 @@ package edu.rochester.bio.ar.gui.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
+import java.util.EventListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,11 +56,9 @@ public class RosterView extends JPanel
         rosterTable.setModel( tableModel );
     }
 
-    @Override
-    public void addPropertyChangeListener( final PropertyChangeListener listener )
+    public void addEventListener( final EventListener listener )
     {
-        super.addPropertyChangeListener( listener );
-        rosterTable.addPropertyChangeListener( listener );
-        currentRosterLabel.addPropertyChangeListener( listener );
+        rosterTable.addPropertyChangeListener( (PropertyChangeListener) listener );
+        currentRosterLabel.addPropertyChangeListener( (PropertyChangeListener) listener );
     }
 }

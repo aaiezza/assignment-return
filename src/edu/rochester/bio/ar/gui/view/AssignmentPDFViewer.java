@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.EventListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,12 +54,8 @@ public class AssignmentPDFViewer extends JPanel
             ( pdfDirectory == null ) ? "" : pdfDirectory.getAbsolutePath() ) );
     }
 
-    @Override
-    public void addPropertyChangeListener( PropertyChangeListener listener )
+    public void addEventListener( final EventListener listener )
     {
-        super.addPropertyChangeListener( listener );
-        currentPDFLabel.addPropertyChangeListener( listener );
+        currentPDFLabel.addPropertyChangeListener( (PropertyChangeListener) listener );
     }
-
-
 }

@@ -5,7 +5,7 @@ package edu.rochester.bio.ar.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.beans.PropertyChangeListener;
+import java.util.EventListener;
 
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -57,15 +57,11 @@ public class StudentAssignmentConfirmationView extends JSplitPane
         studentPDFConfirmerPanel.add( studentsConfirmedProgressBar, BorderLayout.SOUTH );
     }
 
-    @Override
-    public void addPropertyChangeListener( final PropertyChangeListener listener )
+    public void addEventListener( final EventListener listener )
     {
-        super.addPropertyChangeListener( listener );
         if ( rosterPanel != null )
-            rosterPanel.addPropertyChangeListener( listener );
-        if ( studentsConfirmedProgressBar != null )
-            studentsConfirmedProgressBar.addPropertyChangeListener( listener );
+            rosterPanel.addEventListener( listener );
         if ( pdfViewerPanel != null )
-            pdfViewerPanel.addPropertyChangeListener( listener );
+            pdfViewerPanel.addEventListener( listener );
     }
 }
