@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.rochester.bio.ar.Roster;
-import edu.rochester.bio.ar.util.RosterFileParser;
 
 /**
  * @author Alex Aiezza
@@ -27,7 +26,8 @@ public class ARSwingControllerTest
     @BeforeClass
     public static void init() throws IOException
     {
-        roster = RosterFileParser.parseRoster( "test_resources/20170131_roster.txt" );
+        // roster = RosterFileParser.parseRoster(
+        // "test_resources/20170131_roster.txt" );
         pdfDirectory = new File( "Quiz1_assignments" );
         assignment = "Quiz1";
     }

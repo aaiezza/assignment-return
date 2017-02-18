@@ -18,10 +18,10 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import edu.rochester.bio.ar.AssignmentReturner;
 import edu.rochester.bio.ar.Roster;
@@ -65,7 +64,6 @@ public class StudentAssignmentConfirmationController implements ActionListener
         confirmingStudent = new AtomicInteger();
 
         sacv = new StudentAssignmentConfirmationView();
-        sacv.setTableModel( getRosterTableModel() );
         // sacv.addEventListener( this );
     }
 
@@ -113,19 +111,23 @@ public class StudentAssignmentConfirmationController implements ActionListener
     }
 
     @SuppressWarnings ( "serial" )
-    TableModel getRosterTableModel()
+    AbstractTableModel getRosterTableModel()
     {
         return new AbstractTableModel()
         {
             private final Roster roster = ar.getRoster();
             {
-                addTableModelListener( tce -> {} );
+                addTableModelListener( tce -> {
+                    System.out.println();
+                    System.out.println( tce.getSource() );
+                    System.out.println();
+                } );
             }
 
             @Override
             public int getRowCount()
             {
-                return roster.getNumberOfRows();
+                return roster.getNumberOfRows() + 1;
             }
 
             @Override
@@ -145,7 +147,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
             {
                 final AtomicInteger col = new AtomicInteger();
                 final AtomicBoolean found = new AtomicBoolean();
-                roster.columnKeySet().stream().forEach( c -> {
+                new Vector<String>( roster.columnKeySet() ).forEach( c -> {
                     if ( !c.equals( columnName ) )
                     {
                         if ( !found.get() )
@@ -164,8 +166,12 @@ public class StudentAssignmentConfirmationController implements ActionListener
             @Override
             public Object getValueAt( int rowIndex, int columnIndex )
             {
+                if ( rowIndex == 0 )
+                    return getColumnName( columnIndex );
                 return roster.get( rowIndex, getColumnName( columnIndex ) );
             }
+
+
         };
     }
 
@@ -205,7 +211,9 @@ public class StudentAssignmentConfirmationController implements ActionListener
                     ar.setRosterFile( new File( (String) arid.getField( ROSTER_FILE ) ) );
                     sacv.getRosterView()
                             .setCurrentRosterLabel( ar.getRosterFile().getAbsolutePath() );
-                } catch ( final FileNotFoundException ex )
+                    ar.updateRoster();
+                    sacv.getRosterView().setRosterTable( getRosterTableModel() );
+                } catch ( final IOException ex )
                 {
                     JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",
                         JOptionPane.ERROR_MESSAGE );

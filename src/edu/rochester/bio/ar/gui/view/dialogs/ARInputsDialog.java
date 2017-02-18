@@ -41,7 +41,7 @@ public abstract class ARInputsDialog extends JDialog
     public static final int                 EMAIL_INPUTS_DIALOG                 = 1;
 
     /* Form fields */
-    public static final String              SUBMIT_AND_SPLIT_BUTTON             = "Submit";
+    public static final String              SUBMIT_AND_SPLIT_BUTTON             = "Submit & Split";
 
     /* Default button components */
     protected final JButton                 submitAndSplitButton                = new JButton(

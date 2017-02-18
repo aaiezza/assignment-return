@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
-import javax.swing.table.TableModel;
+import javax.swing.table.AbstractTableModel;
 
 /**
  * @author Alex Aiezza
@@ -53,9 +53,11 @@ public class RosterView extends JPanel
                 .setText( String.format( CURRENT_ROSTER_FILE_LABEL_FORMAT, currentRosterFile ) );
     }
 
-    public void setRosterTable( final TableModel tableModel )
+    public void setRosterTable( final AbstractTableModel tableModel )
     {
-        rosterTable.setModel( tableModel );
+        JTable tb = new JTable( tableModel );
+        rosterTable.setModel( tb.getModel() );
+        rosterTable.setTableHeader( tb.getTableHeader() );
     }
 
     public void addEventListener( final EventListener listener )

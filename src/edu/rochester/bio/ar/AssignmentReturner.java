@@ -74,7 +74,7 @@ public class AssignmentReturner implements Runnable
         names =
     { "-d", "--delimiter" },
         description = "The delimiter separating values in the roster file" )
-    private String                         rosterDelimiter;
+    private String                         rosterDelimiter                                = "\t";
 
     @Parameter (
         names =
