@@ -39,13 +39,19 @@ public class Roster
 
     private final TreeBasedTable<Integer, String, String> roster;
 
-    private final List<String>                            headers                = Lists
+    private final List<String>                            headerOrder            = Lists
+            .newArrayList();
+
+    private final List<Integer>                           rowOrder               = Lists
             .newArrayList();
 
     public Roster()
     {
-        roster = TreeBasedTable.create( Ordering.natural(),
-            Ordering.from( ( o1, o2 ) -> Ordering.explicit( headers ).compare( o1, o2 ) ) );
+        roster = TreeBasedTable.create(
+            // Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder
+            // ).compare( o1, o2 ) ),
+            Ordering.natural(),
+            Ordering.from( ( o1, o2 ) -> Ordering.explicit( headerOrder ).compare( o1, o2 ) ) );
     }
 
     public int getNumberOfRows()
@@ -70,8 +76,10 @@ public class Roster
 
     public String put( final int rowNumber, final String fieldName, final String value )
     {
-        if ( !headers.contains( fieldName ) )
-            headers.add( fieldName );
+        if ( !headerOrder.contains( fieldName ) )
+            headerOrder.add( fieldName );
+        if ( !rowOrder.contains( rowNumber ) )
+            rowOrder.add( rowNumber );
         return roster.put( rowNumber, fieldName, value );
     }
 
@@ -83,6 +91,15 @@ public class Roster
     public void remove( final int rowNumber )
     {
         roster.rowMap().remove( rowNumber );
+    }
+
+    public void setRowOrder( final List<Integer> rowOrder )
+    {
+        if ( this.rowOrder.size() != rowOrder.size() )
+            throw new IllegalArgumentException( String.format(
+                "The size of theist of order of rows must be exactly %d", getNumberOfRows() ) );
+        this.rowOrder.clear();
+        this.rowOrder.addAll( rowOrder );
     }
 
     public static Roster create()

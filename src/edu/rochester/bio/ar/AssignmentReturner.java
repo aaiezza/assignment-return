@@ -144,6 +144,8 @@ public class AssignmentReturner implements Runnable
     @Parameter ( names = "--help", description = "Display this useful message", help = true )
     private boolean                        help;
 
+    private boolean                        changed                                        = true;
+
     /**
      * Exists so {@link JCommander} can simply inject all of the variables.
      */
@@ -288,10 +290,14 @@ public class AssignmentReturner implements Runnable
      */
     public void setRosterFile( final File rosterFile ) throws FileNotFoundException
     {
-        if ( !rosterFile.exists() )
+        if ( rosterFile == null || !rosterFile.exists() )
             throw new FileNotFoundException( String.format( ROSTER_FILE_NOT_FOUND_EXCEPTION_FORMAT,
                 rosterFile.getAbsolutePath() ) );
-        this.rosterFile = rosterFile;
+        if ( this.rosterFile == null ^ !rosterFile.equals( this.rosterFile ) )
+        {
+            changed = true;
+            this.rosterFile = rosterFile;
+        }
     }
 
     /**
@@ -304,7 +310,12 @@ public class AssignmentReturner implements Runnable
 
     public void updateRoster() throws IOException
     {
-        roster = RosterFileParser.parseRoster( getRosterFile(), getRosterDelimiter() );
+        if ( changed )
+        {
+            System.out.println( "Updating roster" );
+            roster = RosterFileParser.parseRoster( getRosterFile(), getRosterDelimiter() );
+            changed = false;
+        }
     }
 
     /**
@@ -501,6 +512,10 @@ public class AssignmentReturner implements Runnable
         this.password = password;
     }
 
+    public boolean hasChanged()
+    {
+        return changed;
+    }
 
     /**
      * @param args

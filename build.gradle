@@ -18,7 +18,8 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.4'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
-    
+    compile group: 'org.swinglabs', name: 'swingx', version: '1.6.1'
+
     testCompile group: 'org.mockito', name: 'mockito-all', version: '2.0.2-beta'
     testCompile 'junit:junit:4.+'
     testCompile 'junit-addons:junit-addons:1.+'

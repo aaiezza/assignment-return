@@ -129,7 +129,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
             @Override
             public int getRowCount()
             {
-                return roster.getNumberOfRows() + 1;
+                return roster.getNumberOfRows();
             }
 
             @Override
@@ -168,9 +168,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
             @Override
             public Object getValueAt( int rowIndex, int columnIndex )
             {
-                if ( rowIndex == 0 )
-                    return getColumnName( columnIndex );
-                return roster.get( rowIndex, getColumnName( columnIndex ) );
+                return roster.get( rowIndex + 1, getColumnName( columnIndex ) );
             }
 
 
@@ -218,7 +216,9 @@ public class StudentAssignmentConfirmationController implements ActionListener
                         ar.setRosterFile( new File( (String) arid.getField( ROSTER_FILE ) ) );
                         sacv.getRosterView()
                                 .setCurrentRosterLabel( ar.getRosterFile().getAbsolutePath() );
+                        boolean changed = ar.hasChanged();
                         ar.updateRoster();
+                        if(changed)
                         sacv.getRosterView().setRosterTable( getRosterTableModel() );
                     } catch ( final IOException ex )
                     {
