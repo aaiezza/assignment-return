@@ -31,31 +31,60 @@ import com.google.common.base.Optional;
  */
 public abstract class ARInputsDialog extends JDialog
 {
-    private static final long               serialVersionUID      = 1L;
+    private static final long               serialVersionUID                    = 1L;
 
     /* Different Dialog Types */
-
-    public static final int                 MAIN_INPUTS_DIALOG    = 0;
-    public static final int                 EMAIL_INPUTS_DIALOG   = 1;
+    public static final int                 MAIN_INPUTS_DIALOG                  = 0;
+    public static final int                 EMAIL_INPUTS_DIALOG                 = 1;
 
     /* Form fields */
-
-    public static final String              SUBMIT_BUTTON         = "Submit";
+    public static final String              SUBMIT_AND_SPLIT_BUTTON             = "Submit";
 
     /* Default button components */
-
-    private final JButton                   okButton              = new JButton( SUBMIT_BUTTON );
-    private static final GridBagConstraints OK_BUTTON_CONSTRAINTS = new GridBagConstraints();
+    private final JButton                   submitAndSplitButton                = new JButton(
+            SUBMIT_AND_SPLIT_BUTTON );
+    private static final GridBagConstraints SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS = new GridBagConstraints();
     {
-        OK_BUTTON_CONSTRAINTS.gridx = 0;
-        OK_BUTTON_CONSTRAINTS.weightx = 1.0;
-        OK_BUTTON_CONSTRAINTS.weighty = 1.0;
-        OK_BUTTON_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
-        OK_BUTTON_CONSTRAINTS.insets = new Insets( 8, 8, 8, 8 );
-        OK_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.SOUTH;
-        OK_BUTTON_CONSTRAINTS.gridwidth = 3;
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.gridx = 0;
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.weightx = 1.0;
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.weighty = 1.0;
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.insets = new Insets( 8, 8, 8, 8 );
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.SOUTH;
+        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.gridwidth = 3;
 
-        okButton.addActionListener( e -> this.dispose() );
+        submitAndSplitButton.addActionListener( e -> this.dispose() );
+    }
+
+    /* Item Layout Constraints */
+    public static final GridBagConstraints LABEL_CONSTRAINTS                   = new GridBagConstraints();
+    public static final GridBagConstraints INPUT_FIELD_CONSTRAINTS             = new GridBagConstraints();
+    public static final GridBagConstraints INPUT_FIELD_WITH_BUTTON_CONSTRAINTS = new GridBagConstraints();
+    public static final GridBagConstraints BUTTON_CONSTRAINTS                  = new GridBagConstraints();
+    public static final GridBagConstraints SEPARATOR_CONSTRAINTS               = new GridBagConstraints();
+    static
+    {
+        LABEL_CONSTRAINTS.insets = INPUT_FIELD_CONSTRAINTS.insets = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.insets = BUTTON_CONSTRAINTS.insets = SEPARATOR_CONSTRAINTS.insets = new Insets(
+                8, 2, 2, 2 );
+
+        LABEL_CONSTRAINTS.gridx = 0;
+        LABEL_CONSTRAINTS.anchor = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.EAST;
+
+        INPUT_FIELD_CONSTRAINTS.fill = GridBagConstraints.BOTH;
+        INPUT_FIELD_CONSTRAINTS.gridx = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.gridx = 1;
+        INPUT_FIELD_CONSTRAINTS.gridwidth = 2;
+        INPUT_FIELD_CONSTRAINTS.anchor = BUTTON_CONSTRAINTS.anchor = GridBagConstraints.WEST;
+
+        INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.gridwidth = BUTTON_CONSTRAINTS.gridwidth = 1;
+        INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.weightx = INPUT_FIELD_CONSTRAINTS.weightx = 1.0;
+        INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
+
+        BUTTON_CONSTRAINTS.gridx = 2;
+        BUTTON_CONSTRAINTS.fill = GridBagConstraints.NONE;
+
+        SEPARATOR_CONSTRAINTS.gridwidth = 3;
+        SEPARATOR_CONSTRAINTS.gridx = 0;
+        SEPARATOR_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
     }
 
     private final Map<String, Supplier<Object>> getterMap = Maps.newHashMap();
@@ -84,7 +113,7 @@ public abstract class ARInputsDialog extends JDialog
         initDialogComponents();
 
         // Always a submit and cancel button
-        add( okButton, OK_BUTTON_CONSTRAINTS );
+        add( submitAndSplitButton, SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS );
 
         UIManager.put( "Button.font", getFont() );
         SwingUtilities.updateComponentTreeUI( this );

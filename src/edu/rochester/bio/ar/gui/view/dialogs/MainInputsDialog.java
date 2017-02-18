@@ -4,7 +4,6 @@
 package edu.rochester.bio.ar.gui.view.dialogs;
 
 import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.event.FocusListener;
 import java.io.File;
 
@@ -25,60 +24,28 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class MainInputsDialog extends ARInputsDialog
 {
     /* Form fields */
-    public static final String             ASSIGNMENT_TITLE                    = "Assignment Title";
-    public static final String             ROSTER_FILE                         = "Roster File";
-    public static final String             COMBINED_PDF                        = "Combined PDF";
-    public static final String             INDIVIDUAL_PDF_OUTPUT_DIRECTORY     = "Individual PDF Output Directory";
-    public static final String             INIDIVIDUAL_PDF_NAMING_VARIABLE     = "Individual PDF Naming Variable";
-    public static final String             PREVIEW_PAGE                        = "Preview Page";
+    public static final String ASSIGNMENT_TITLE                = "Assignment Title";
+    public static final String ROSTER_FILE                     = "Roster File";
+    public static final String COMBINED_PDF                    = "Combined PDF";
+    public static final String INDIVIDUAL_PDF_OUTPUT_DIRECTORY = "Individual PDF Output Directory";
+    public static final String INIDIVIDUAL_PDF_NAMING_VARIABLE = "Individual PDF Naming Variable";
+    public static final String PREVIEW_PAGE                    = "Preview Page";
 
     /* Dialog Components */
+    JTextField                 assignmentTitle;
 
-    JTextField                             assignmentTitle;
+    JTextField                 rosterFile;
+    JButton                    rosterFileBrowseButton;
 
-    JTextField                             rosterFile;
-    JButton                                rosterFileBrowseButton;
+    JTextField                 combinedPdf;
+    JButton                    combinedPdfBrowseButton;
 
-    JTextField                             combinedPdf;
-    JButton                                combinedPdfBrowseButton;
+    JTextField                 indPdfOutputDirectory;
+    JButton                    indPdfOutputDirectoryButton;
 
-    JTextField                             indPdfOutputDirectory;
-    JButton                                indPdfOutputDirectoryButton;
+    JTextField                 indPdfNamingVariable;
 
-    JTextField                             indPdfNamingVariable;
-
-    JSpinner                               previewPage;
-
-
-    public static final GridBagConstraints LABEL_CONSTRAINTS                   = new GridBagConstraints();
-    public static final GridBagConstraints INPUT_FIELD_CONSTRAINTS             = new GridBagConstraints();
-    public static final GridBagConstraints INPUT_FIELD_WITH_BUTTON_CONSTRAINTS = new GridBagConstraints();
-    public static final GridBagConstraints BUTTON_CONSTRAINTS                  = new GridBagConstraints();
-    public static final GridBagConstraints SEPARATOR_CONSTRAINTS               = new GridBagConstraints();
-    static
-    {
-        LABEL_CONSTRAINTS.insets = INPUT_FIELD_CONSTRAINTS.insets = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.insets = BUTTON_CONSTRAINTS.insets = SEPARATOR_CONSTRAINTS.insets = new Insets(
-                8, 2, 2, 2 );
-
-        LABEL_CONSTRAINTS.gridx = 0;
-        LABEL_CONSTRAINTS.anchor = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.EAST;
-
-        INPUT_FIELD_CONSTRAINTS.fill = GridBagConstraints.BOTH;
-        INPUT_FIELD_CONSTRAINTS.gridx = INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.gridx = 1;
-        INPUT_FIELD_CONSTRAINTS.gridwidth = 2;
-        INPUT_FIELD_CONSTRAINTS.anchor = BUTTON_CONSTRAINTS.anchor = GridBagConstraints.WEST;
-
-        INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.gridwidth = BUTTON_CONSTRAINTS.gridwidth = 1;
-        INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.weightx = INPUT_FIELD_CONSTRAINTS.weightx = 1.0;
-        INPUT_FIELD_WITH_BUTTON_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
-
-        BUTTON_CONSTRAINTS.gridx = 2;
-        BUTTON_CONSTRAINTS.fill = GridBagConstraints.NONE;
-
-        SEPARATOR_CONSTRAINTS.gridwidth = 3;
-        SEPARATOR_CONSTRAINTS.gridx = 0;
-        SEPARATOR_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
-    }
+    JSpinner                   previewPage;
 
     /* Make and populate form map */
 
