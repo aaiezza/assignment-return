@@ -19,6 +19,8 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
+import edu.rochester.bio.ar.util.ImageDrawer;
+
 /**
  * @author Alex Aiezza
  *
@@ -42,8 +44,9 @@ public class AssignmentPDFViewer extends JPanel
             protected void paintComponent( Graphics g )
             {
                 super.paintComponent( g );
-                g.drawImage( getPdfPageImage(), -getWidth(), 0, getWidth() * 2, getHeight() * 2,
-                    this );
+
+                if ( getPdfPageImage() != null )
+                    ImageDrawer.drawScaledImage( getPdfPageImage(), this, g );
             }
         };
     }
@@ -89,13 +92,15 @@ public class AssignmentPDFViewer extends JPanel
 
     public void refresh( final int iteration ) throws IOException
     {
-        PDFRenderer pdfRenderer = new PDFRenderer( PDDocument.load( combinedPdf ) );
+        final PDDocument doc = PDDocument.load( combinedPdf );
+        final PDFRenderer pdfRenderer = new PDFRenderer( doc );
         pdfPageImage = pdfRenderer.renderImageWithDPI(
             ( iteration * assignmentLength ) + previewPage - 1, 500, ImageType.RGB );
         pdfPageImagePanel.repaint();
         currentPDFLabel.setText( String.format( CURRENT_PDF_LABEL_FORMAT,
             ( combinedPdf == null ) ? "" : combinedPdf.getAbsolutePath(), previewPage,
             assignmentLength, ( iteration * assignmentLength ) + previewPage, numberOfPages ) );
+        doc.close();
     }
 
     public BufferedImage getPdfPageImage()

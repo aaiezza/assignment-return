@@ -37,10 +37,18 @@ public class ARSwingController implements ActionListener
 
     public ARSwingController()
     {
+        // TODO Read in an ar.ini file to set defaults for the
+        // assignmentReturner model
+
         sacc = new StudentAssignmentConfirmationController( this );
 
         arsv = new ARSwingView( sacc.getStudentAssignmentConfirmationView() );
         arsv.addActionListener( this );
+    }
+
+    public StudentAssignmentConfirmationController getStudentAssignmentConfkrmationController()
+    {
+        return sacc;
     }
 
     public ARSwingView getARSwingView()

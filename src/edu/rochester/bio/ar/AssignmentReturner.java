@@ -330,7 +330,9 @@ public class AssignmentReturner implements Runnable
 
     public int getAssignmentLength() throws InvalidPasswordException, IOException
     {
-        return new AssignmentSplitter( PDDocument.load( combinedAssignment ), outputDirectory,
+        final PDDocument ca = PDDocument.load( combinedAssignment );
+        ca.close();
+        return new AssignmentSplitter( ca, outputDirectory,
                 new AssignmentReturnerInterpolator( roster, assignmentName ) )
                         .getAssignmentLength();
     }

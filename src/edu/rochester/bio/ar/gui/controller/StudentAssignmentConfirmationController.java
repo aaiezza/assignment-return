@@ -51,7 +51,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
      */
     private final AtomicInteger                     confirmingStudent;
 
-    private final AssignmentReturner                ar;
+    private AssignmentReturner                      ar;
 
     private final ARSwingController                 arsc;
 
@@ -73,6 +73,11 @@ public class StudentAssignmentConfirmationController implements ActionListener
     public AssignmentReturner getAssignmentReturner()
     {
         return ar;
+    }
+
+    public void setAssignmentReturner( final AssignmentReturner ar )
+    {
+        this.ar = ar;
     }
 
     public void setRow( final int studentRow )
