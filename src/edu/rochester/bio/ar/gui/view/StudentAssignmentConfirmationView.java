@@ -61,12 +61,15 @@ public class StudentAssignmentConfirmationView extends JSplitPane
     {
         if ( rosterPanel != null )
             rosterPanel.addEventListener( listener );
-        if ( pdfViewerPanel != null )
-            pdfViewerPanel.addEventListener( listener );
     }
 
     public RosterView getRosterView()
     {
         return rosterPanel;
+    }
+
+    public AssignmentPDFViewer getPdfView()
+    {
+        return pdfViewerPanel;
     }
 }

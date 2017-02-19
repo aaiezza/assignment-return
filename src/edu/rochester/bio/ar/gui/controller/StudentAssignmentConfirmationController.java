@@ -9,6 +9,7 @@ import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.FROM_EMAIL
 import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.HOST_NAME;
 import static edu.rochester.bio.ar.gui.view.dialogs.EmailInputsDialog.SMTP_PORT;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.ASSIGNMENT_TITLE;
+import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.COMBINED_PDF;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.INDIVIDUAL_PDF_OUTPUT_DIRECTORY;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.INIDIVIDUAL_PDF_NAMING_VARIABLE;
 import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.PREVIEW_PAGE;
@@ -72,16 +73,6 @@ public class StudentAssignmentConfirmationController implements ActionListener
     public AssignmentReturner getAssignmentReturner()
     {
         return ar;
-    }
-
-    public void setRoster( final Roster roster )
-    {
-        ar.setRoster( roster );
-    }
-
-    public Roster getRoster()
-    {
-        return ar.getRoster();
     }
 
     public void setRow( final int studentRow )
@@ -218,8 +209,21 @@ public class StudentAssignmentConfirmationController implements ActionListener
                                 .setCurrentRosterLabel( ar.getRosterFile().getAbsolutePath() );
                         boolean changed = ar.hasChanged();
                         ar.updateRoster();
-                        if(changed)
-                        sacv.getRosterView().setRosterTable( getRosterTableModel() );
+                        if ( changed )
+                            sacv.getRosterView().setRosterTable( getRosterTableModel() );
+                    } catch ( final IOException ex )
+                    {
+                        JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",
+                            JOptionPane.ERROR_MESSAGE );
+                    }
+                    break;
+                case COMBINED_PDF:
+                    try
+                    {
+                        ar.setCombinedAssignment(
+                            new File( (String) arid.getField( COMBINED_PDF ) ) );
+                        sacv.getPdfView().updateView( ar.getCombinedAssignment(),
+                            ar.getPreviewPage(), ar.getAssignmentLength() );
                     } catch ( final IOException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",

@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -325,6 +326,13 @@ public class AssignmentReturner implements Runnable
     public void setRoster( final Roster roster )
     {
         this.roster = roster;
+    }
+
+    public int getAssignmentLength() throws InvalidPasswordException, IOException
+    {
+        return new AssignmentSplitter( PDDocument.load( combinedAssignment ), outputDirectory,
+                new AssignmentReturnerInterpolator( roster, assignmentName ) )
+                        .getAssignmentLength();
     }
 
     /**

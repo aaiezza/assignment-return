@@ -48,21 +48,28 @@ public class AssignmentSplitter
         this.ari = ari;
     }
 
+    public int getAssignmentLength()
+    {
+        final int assignmentLength = combinedAssignment.getNumberOfPages() /
+                ari.getRoster().getNumberOfRows();
+        final int difference = combinedAssignment.getNumberOfPages() %
+                ari.getRoster().getNumberOfRows();
+
+        if ( difference > 0 )
+            throw new IllegalStateException( String.format( ILLEGAL_ASSIGNMENT_LENGTH_FORMAT,
+                combinedAssignment.getNumberOfPages(), ari.getRoster().rowMap().size(),
+                difference ) );
+
+        return assignmentLength;
+    }
+
     public void split() throws IOException
     {
         // Ensure the output directory exists
         if ( !outputDirectory.exists() )
             outputDirectory.mkdirs();
 
-        final int assignmentLength = combinedAssignment.getNumberOfPages() /
-                ari.getRoster().rowMap().size();
-        final int difference = combinedAssignment.getNumberOfPages() %
-                ari.getRoster().rowMap().size();
-
-        if ( difference > 0 )
-            throw new IllegalStateException( String.format( ILLEGAL_ASSIGNMENT_LENGTH_FORMAT,
-                combinedAssignment.getNumberOfPages(), ari.getRoster().rowMap().size(),
-                difference ) );
+        final int assignmentLength = getAssignmentLength();
 
         final Splitter pdfSplitter = new Splitter();
         pdfSplitter.setSplitAtPage( assignmentLength );
