@@ -25,13 +25,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
 import javax.swing.table.AbstractTableModel;
 
 import edu.rochester.bio.ar.AssignmentReturner;
@@ -138,16 +138,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
             @Override
             public int findColumn( final String columnName )
             {
-                final AtomicInteger col = new AtomicInteger();
-                final AtomicBoolean found = new AtomicBoolean();
-                new Vector<String>( roster.columnKeySet() ).forEach( c -> {
-                    if ( !c.equals( columnName ) )
-                    {
-                        if ( !found.get() )
-                            col.incrementAndGet();
-                    } else found.set( true );
-                } );
-                return col.get();
+                return roster.findColumn( columnName );
             }
 
             @Override
@@ -210,7 +201,13 @@ public class StudentAssignmentConfirmationController implements ActionListener
                         boolean changed = ar.hasChanged();
                         ar.updateRoster();
                         if ( changed )
+                        {
                             sacv.getRosterView().setRosterTable( getRosterTableModel() );
+                            sacv.getRosterView()
+                                    .applySort( Arrays.asList( new SortKey(
+                                            ar.getRoster().findColumn( Roster.LAST_NAME_HEADER ),
+                                            SortOrder.ASCENDING ) ) );
+                        }
                     } catch ( final IOException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",
@@ -224,10 +221,10 @@ public class StudentAssignmentConfirmationController implements ActionListener
                             new File( (String) arid.getField( COMBINED_PDF ) ) );
                         sacv.getPdfView().updateView( ar.getCombinedAssignment(),
                             ar.getPreviewPage(), ar.getAssignmentLength() );
-                    } catch ( final IOException ex )
+                    } catch ( final IOException | IllegalStateException ex )
                     {
-                        JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",
-                            JOptionPane.ERROR_MESSAGE );
+                        JOptionPane.showMessageDialog( arid, ex.getMessage(),
+                            "Combined Assignment PDF Error", JOptionPane.ERROR_MESSAGE );
                     }
                     break;
                 case INDIVIDUAL_PDF_OUTPUT_DIRECTORY:

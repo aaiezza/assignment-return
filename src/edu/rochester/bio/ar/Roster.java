@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Ordering;
@@ -110,6 +112,20 @@ public class Roster
     public Set<String> columnKeySet()
     {
         return roster.columnKeySet();
+    }
+
+    public int findColumn( final String columnName )
+    {
+        final AtomicInteger col = new AtomicInteger();
+        final AtomicBoolean found = new AtomicBoolean();
+        roster.columnKeySet().forEach( c -> {
+            if ( !c.equals( columnName ) )
+            {
+                if ( !found.get() )
+                    col.incrementAndGet();
+            } else found.set( true );
+        } );
+        return col.get();
     }
 
     public String [] getHeaders()

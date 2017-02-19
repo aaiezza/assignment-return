@@ -6,17 +6,15 @@ package edu.rochester.bio.ar.gui.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -75,9 +73,7 @@ public class RosterView extends JPanel
         rosterTable.updateUI();
         rosterTable.setHorizontalScrollEnabled( false );
         rosterTable.setColumnControlVisible( true );
-        rosterTable.setRowSorter( new TableRowSorter<AbstractTableModel>( tableModel ) );
-        rosterTable.getRowSorter()
-                .setSortKeys( Arrays.asList( new RowSorter.SortKey( 2, SortOrder.ASCENDING ) ) );
+
         rosterTable.packAll();
     }
 
@@ -85,5 +81,10 @@ public class RosterView extends JPanel
     {
         rosterTable.addPropertyChangeListener( (PropertyChangeListener) listener );
         currentRosterLabel.addPropertyChangeListener( (PropertyChangeListener) listener );
+    }
+
+    public void applySort( List<? extends SortKey> sorters )
+    {
+        rosterTable.getRowSorter().setSortKeys( sorters );
     }
 }
