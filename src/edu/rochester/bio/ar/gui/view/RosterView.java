@@ -73,7 +73,7 @@ public class RosterView extends JPanel
         rosterTable.updateUI();
         rosterTable.setHorizontalScrollEnabled( false );
         rosterTable.setColumnControlVisible( true );
-
+        rosterTable.setEditable( false );
         rosterTable.packAll();
     }
 

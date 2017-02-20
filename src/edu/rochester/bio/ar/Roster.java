@@ -50,9 +50,8 @@ public class Roster
     public Roster()
     {
         roster = TreeBasedTable.create(
-            // Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder
-            // ).compare( o1, o2 ) ),
-            Ordering.natural(),
+            Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder ).compare( o1, o2 ) ),
+            // Ordering.natural(),
             Ordering.from( ( o1, o2 ) -> Ordering.explicit( headerOrder ).compare( o1, o2 ) ) );
     }
 
@@ -99,7 +98,7 @@ public class Roster
     {
         if ( this.rowOrder.size() != rowOrder.size() )
             throw new IllegalArgumentException( String.format(
-                "The size of theist of order of rows must be exactly %d", getNumberOfRows() ) );
+                "The size of the list of order of rows must be exactly %d", getNumberOfRows() ) );
         this.rowOrder.clear();
         this.rowOrder.addAll( rowOrder );
     }

@@ -50,20 +50,20 @@ public abstract class ARInputsDialog extends JDialog
     public static final int                 EMAIL_INPUTS_DIALOG                 = 1;
 
     /* Form fields */
-    public static final String              SUBMIT_AND_SPLIT_BUTTON             = "Submit & Split";
+    public static final String              OK_BUTTON                           = "OK";
 
     /* Default button components */
     protected final JButton                 submitAndSplitButton                = new JButton(
-            SUBMIT_AND_SPLIT_BUTTON );
-    private static final GridBagConstraints SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS = new GridBagConstraints();
+            OK_BUTTON );
+    private static final GridBagConstraints OK_BUTTON_CONSTRAINTS = new GridBagConstraints();
     {
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.gridx = 0;
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.weightx = 1.0;
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.weighty = 1.0;
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.insets = new Insets( 8, 8, 8, 8 );
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.SOUTH;
-        SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS.gridwidth = 3;
+        OK_BUTTON_CONSTRAINTS.gridx = 0;
+        OK_BUTTON_CONSTRAINTS.weightx = 1.0;
+        OK_BUTTON_CONSTRAINTS.weighty = 1.0;
+        OK_BUTTON_CONSTRAINTS.fill = GridBagConstraints.HORIZONTAL;
+        OK_BUTTON_CONSTRAINTS.insets = new Insets( 8, 8, 8, 8 );
+        OK_BUTTON_CONSTRAINTS.anchor = GridBagConstraints.SOUTH;
+        OK_BUTTON_CONSTRAINTS.gridwidth = 3;
     }
 
     /* Item Layout Constraints */
@@ -158,7 +158,7 @@ public abstract class ARInputsDialog extends JDialog
         } );
 
         // Always a submit and cancel button
-        add( submitAndSplitButton, SUBMIT_AND_SPLIT_BUTTON_CONSTRAINTS );
+        add( submitAndSplitButton, OK_BUTTON_CONSTRAINTS );
 
         UIManager.put( "Button.font", getFont() );
         UIManager.put( "Label.font", getFont() );

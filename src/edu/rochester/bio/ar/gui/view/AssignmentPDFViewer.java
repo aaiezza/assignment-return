@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,11 +52,13 @@ public class AssignmentPDFViewer extends JPanel
         };
     }
 
-    private BufferedImage pdfPageImage;
+    private BufferedImage       pdfPageImage;
 
-    private File          combinedPdf;
+    private File                combinedPdf;
 
-    private int           previewPage, assignmentLength, numberOfPages;
+    private int                 previewPage, assignmentLength, numberOfPages;
+
+    private final AtomicInteger currentIteration = new AtomicInteger();
 
     /**
      * 
@@ -87,10 +90,10 @@ public class AssignmentPDFViewer extends JPanel
         final PDDocument cpdf = PDDocument.load( combinedPdf );
         this.numberOfPages = cpdf.getNumberOfPages();
         cpdf.close();
-        refresh( 0 );
+        setCurrentIteration( 0 );
     }
 
-    public void refresh( final int iteration ) throws IOException
+    public void setCurrentIteration( final int iteration ) throws IOException
     {
         final PDDocument doc = PDDocument.load( combinedPdf );
         final PDFRenderer pdfRenderer = new PDFRenderer( doc );
@@ -101,6 +104,12 @@ public class AssignmentPDFViewer extends JPanel
             ( combinedPdf == null ) ? "" : combinedPdf.getAbsolutePath(), previewPage,
             assignmentLength, ( iteration * assignmentLength ) + previewPage, numberOfPages ) );
         doc.close();
+        currentIteration.set( iteration );
+    }
+
+    public int getCurrentIteration()
+    {
+        return currentIteration.get();
     }
 
     public BufferedImage getPdfPageImage()

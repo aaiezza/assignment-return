@@ -7,11 +7,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.EventListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 /**
  * @author Alex Aiezza
@@ -25,6 +27,12 @@ public class StudentAssignmentConfirmationView extends JSplitPane
 
     private final JPanel              studentPDFConfirmerPanel     = new JPanel(
             new BorderLayout( 0, 0 ) );
+
+    private final JButton             backArrow                    = new BasicArrowButton(
+            BasicArrowButton.WEST );
+
+    private final JButton             forwardArrow                 = new BasicArrowButton(
+            BasicArrowButton.EAST );
 
     private final JProgressBar        studentsConfirmedProgressBar = new JProgressBar(
             JProgressBar.HORIZONTAL );
@@ -54,7 +62,13 @@ public class StudentAssignmentConfirmationView extends JSplitPane
                 .setBorder( new SoftBevelBorder( BevelBorder.RAISED, null, null, null, null ) );
         rosterConfirmationSplitPane.setBottomComponent( studentPDFConfirmerPanel );
 
+        // TODO Better to have this use GridBagLayout
         studentPDFConfirmerPanel.add( studentsConfirmedProgressBar, BorderLayout.SOUTH );
+        JPanel confirmerControls = new JPanel();
+        studentPDFConfirmerPanel.add( confirmerControls );
+
+        confirmerControls.add( backArrow, BorderLayout.WEST );
+        confirmerControls.add( forwardArrow, BorderLayout.EAST );
     }
 
     public void addEventListener( final EventListener listener )

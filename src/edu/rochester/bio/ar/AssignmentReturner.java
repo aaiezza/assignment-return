@@ -334,6 +334,8 @@ public class AssignmentReturner implements Runnable
     {
         final PDDocument ca = PDDocument.load( combinedAssignment );
         ca.close();
+        if ( roster.getNumberOfRows() == 0 )
+            return 0;
         return new AssignmentSplitter( ca, outputDirectory,
                 new AssignmentReturnerInterpolator( roster, assignmentName ) )
                         .getAssignmentLength();
