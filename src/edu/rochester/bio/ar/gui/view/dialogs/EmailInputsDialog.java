@@ -3,16 +3,13 @@
  */
 package edu.rochester.bio.ar.gui.view.dialogs;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -33,15 +30,20 @@ public class EmailInputsDialog extends ARInputsDialog
     public static final String SMTP_PORT           = "SMTP Port";
 
     /* Dialog Components */
+    JLabel                     fromEmailLabel;
     JTextField                 fromEmail;
 
+    JLabel                     emailPasswordLabel;
     JPasswordField             emailPassword;
 
+    JLabel                     emailTemplateLabel;
     JTextField                 emailTemplate;
     JButton                    emailTemplateBrowseButton;
 
+    JLabel                     hostNameLabel;
     JTextField                 hostName;
 
+    JLabel                     smtpPortLabel;
     JSpinner                   smtpPort;
 
     public EmailInputsDialog( final JFrame parent )
@@ -57,62 +59,54 @@ public class EmailInputsDialog extends ARInputsDialog
     {
         fromEmail = new JTextField();
         fromEmail.setName( FROM_EMAIL );
+        fromEmailLabel = labelMaker( FROM_EMAIL, fromEmail );
 
         emailPassword = new JPasswordField();
         emailPassword.setName( EMAIL_PASSWORD );
+        emailPasswordLabel = labelMaker( EMAIL_PASSWORD, emailPassword );
 
         emailTemplate = new JTextField();
         emailTemplate.setName( EMAIL_TEMPLATE_FILE );
-        emailTemplateBrowseButton = new JButton( "…" );
-        {
-            emailTemplateBrowseButton.addActionListener( evt -> {
-                JFileChooser fc = new JFileChooser();
-                fc.setCurrentDirectory( new File( System.getProperty( "user.dir" ) ) );
-                fc.setFileSelectionMode( JFileChooser.FILES_ONLY );
-                fc.setFileFilter( new FileNameExtensionFilter( "Text File", "txt" ) );
-                fc.setFileHidingEnabled( true );
-                fc.showOpenDialog( this );
-                emailTemplate.setText(
-                    fc.getSelectedFile() != null ? fc.getSelectedFile().getAbsolutePath()
-                                                 : emailTemplate.getText() );
-                emailTemplate.setCaretPosition( 0 );
-            } );
-        }
+        emailTemplateLabel = labelMaker( EMAIL_TEMPLATE_FILE, emailTemplate );
+        emailTemplateBrowseButton = makeBrowseButton( emailTemplate,
+            fc -> fc.setFileFilter( new FileNameExtensionFilter( "Text File", "txt" ) ) );
 
         hostName = new JTextField();
         hostName.setName( HOST_NAME );
+        hostNameLabel = labelMaker( HOST_NAME, hostName );
 
         smtpPort = new JSpinner();
         smtpPort.setModel( new SpinnerNumberModel( 1, 1, 10000, 1 ) );
         ( (JSpinner.DefaultEditor) smtpPort.getEditor() ).getTextField().setName( SMTP_PORT );
+        smtpPortLabel = labelMaker( SMTP_PORT, smtpPort );
 
         addComponents();
     }
 
     private void addComponents()
     {
-        add( new JLabel( FROM_EMAIL ), LABEL_CONSTRAINTS );
+        add( fromEmailLabel, LABEL_CONSTRAINTS );
         add( FROM_EMAIL, fromEmail, INPUT_FIELD_CONSTRAINTS, fromEmail::getText,
             t -> fromEmail.setText( (String) t ) );
 
-        add( new JLabel( EMAIL_PASSWORD ), LABEL_CONSTRAINTS );
+        add( emailPasswordLabel, LABEL_CONSTRAINTS );
         add( EMAIL_PASSWORD, emailPassword, INPUT_FIELD_CONSTRAINTS, emailPassword::getPassword,
             t -> emailPassword.setText( (String) t ) );
 
-        add( new JSeparator( JSeparator.HORIZONTAL ), SEPARATOR_CONSTRAINTS );
+        addSeparator();
 
-        add( new JLabel( EMAIL_TEMPLATE_FILE ), LABEL_CONSTRAINTS );
+        add( emailTemplateLabel, LABEL_CONSTRAINTS );
         add( EMAIL_TEMPLATE_FILE, emailTemplate, INPUT_FIELD_WITH_BUTTON_CONSTRAINTS,
             emailTemplate::getText, t -> emailTemplate.setText( (String) t ) );
         add( emailTemplateBrowseButton, BUTTON_CONSTRAINTS );
 
-        add( new JSeparator( JSeparator.HORIZONTAL ), SEPARATOR_CONSTRAINTS );
+        addSeparator();
 
-        add( new JLabel( HOST_NAME ), LABEL_CONSTRAINTS );
+        add( hostNameLabel, LABEL_CONSTRAINTS );
         add( HOST_NAME, hostName, INPUT_FIELD_CONSTRAINTS, hostName::getText,
             t -> hostName.setText( (String) t ) );
 
-        add( new JLabel( SMTP_PORT ), LABEL_CONSTRAINTS );
+        add( smtpPortLabel, LABEL_CONSTRAINTS );
         JSpinner.DefaultEditor smtpe = ( (JSpinner.DefaultEditor) smtpPort.getEditor() );
         add( SMTP_PORT, smtpPort, SPINNER_CONSTRAINTS, smtpPort::getValue,
             t -> smtpPort.setValue( (int) t ) );

@@ -36,6 +36,8 @@ public class AssignmentReturner implements Runnable
 
     private static final String            EMAIL_TEMPLATE_FILE_NOT_FOUND_EXCEPTION_FORMAT = "The given email template file '%s' does not exist.";
 
+    private static final String            ILLEGAL_PREVIEW_PAGE_EXCEPTION_FORMAT          = "Cannot have preview page be '%d', Must be between [ %d - %d ].";
+
     /* Components for Running */
 
     private AssignmentReturnerInterpolator ari;
@@ -430,6 +432,19 @@ public class AssignmentReturner implements Runnable
      */
     public void setPreviewPage( int previewPage )
     {
+        try
+        {
+            final int min = 1, max = getAssignmentLength();
+            if ( min > previewPage || previewPage > max )
+            {
+                throw new IllegalArgumentException( String
+                        .format( ILLEGAL_PREVIEW_PAGE_EXCEPTION_FORMAT, previewPage, min, max ) );
+            }
+        } catch ( IOException e )
+        {
+            // Consume this, because we user is only trying to set the preview
+            // page with having a valid roster and assignment set yet.
+        }
         this.previewPage = previewPage;
     }
 

@@ -90,7 +90,7 @@ public class ARSwingController implements ActionListener
                 }
 
                 // On submission, retrieve new values for model
-                mainInputsDialog.addFocusListener( sacc.getARupdater( mainInputsDialog ) );
+                mainInputsDialog.addFocusListener( sacc.getARUpdatingFocusListener( mainInputsDialog ) );
             }
             break;
         case ARSwingView.EMAIL_SETTINGS_LABEL:
@@ -110,7 +110,7 @@ public class ARSwingController implements ActionListener
                 }
 
                 // On submission, retrieve new values for model
-                emailInputsDialog.addFocusListener( sacc.getARupdater( emailInputsDialog ) );
+                emailInputsDialog.addFocusListener( sacc.getARUpdatingFocusListener( emailInputsDialog ) );
             }
             break;
         default:

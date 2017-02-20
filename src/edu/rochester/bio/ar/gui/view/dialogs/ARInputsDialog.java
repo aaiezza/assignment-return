@@ -15,6 +15,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -22,11 +24,15 @@ import java.util.function.Supplier;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.MouseInputListener;
 
 import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
@@ -122,15 +128,23 @@ public abstract class ARInputsDialog extends JDialog
         // Hit up the subclass for the components and their layout
         initDialogComponents();
 
+        // Are you listening to the cries of the dialog?
         getFields().forEach( f -> {
             f.addKeyListener( new KeyListener()
             {
                 @Override
                 public void keyTyped( KeyEvent e )
                 {
-                    if ( e.getKeyChar() == KeyEvent.VK_ENTER ||
-                            e.getKeyChar() == KeyEvent.VK_ESCAPE )
+                    switch ( e.getKeyChar() )
+                    {
+                    case KeyEvent.VK_ENTER:
                         submitAndSplitButton.doClick();
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        dispose();
+                        break;
+                    default:
+                    }
                 }
 
                 @Override
@@ -195,6 +209,76 @@ public abstract class ARInputsDialog extends JDialog
                 f -> listener.focusLost( new FocusEvent( f, FocusEvent.FOCUS_LOST ) ) );
             this.dispose();
         } );
+    }
+
+    protected void addSeparator()
+    {
+        add( new JSeparator( JSeparator.HORIZONTAL ), SEPARATOR_CONSTRAINTS );
+    }
+
+    protected JLabel labelMaker( final String text, final Component labelFor )
+    {
+        JLabel label = new JLabel( text );
+        label.setLabelFor( labelFor );
+        label.addMouseListener( new MouseInputListener()
+        {
+            @Override
+            public void mouseMoved( MouseEvent e )
+            {}
+
+            @Override
+            public void mouseDragged( MouseEvent e )
+            {}
+
+            @Override
+            public void mouseReleased( MouseEvent e )
+            {}
+
+            @Override
+            public void mousePressed( MouseEvent e )
+            {}
+
+            @Override
+            public void mouseExited( MouseEvent e )
+            {
+                e.getComponent().setFont( e.getComponent().getFont().deriveFont( Font.PLAIN ) );
+            }
+
+            @Override
+            public void mouseEntered( MouseEvent e )
+            {
+                e.getComponent().setFont( e.getComponent().getFont().deriveFont( Font.BOLD ) );
+            }
+
+            @Override
+            public void mouseClicked( MouseEvent e )
+            {
+                ( (JLabel) e.getComponent() ).getLabelFor().requestFocus();
+            }
+        } );
+        return label;
+    }
+
+    protected final JButton makeBrowseButton(
+            final JTextField fieldToUpdate,
+            final Consumer<JFileChooser> customizeFileChooser )
+    {
+        final JButton browseButton = new JButton( "…" );
+        browseButton.addActionListener( evt -> {
+            final JFileChooser fc = new JFileChooser();
+            fc.setCurrentDirectory( new File( System.getProperty( "user.dir" ) ) );
+            fc.setFileHidingEnabled( true );
+            fc.setFileSelectionMode( JFileChooser.FILES_ONLY );
+            customizeFileChooser.accept( fc );
+            fc.showOpenDialog( this );
+            if ( fc.getSelectedFile() != null )
+                fieldToUpdate.setText(
+                    fc.getSelectedFile() != null ? fc.getSelectedFile().getAbsolutePath()
+                                                 : fieldToUpdate.getText() );
+            fieldToUpdate.setCaretPosition( 0 );
+            fieldToUpdate.requestFocus();
+        } );
+        return browseButton;
     }
 
     public static ARInputsDialog getOptions( final JFrame parent, final int dialogType )

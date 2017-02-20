@@ -162,7 +162,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
         };
     }
 
-    FocusListener getARupdater( final ARInputsDialog arid )
+    FocusListener getARUpdatingFocusListener( final ARInputsDialog arid )
     {
         // String aTitle = assignmentTitle.getText();
         // TODO make sure aTitle doesn't have any illegal characters
@@ -215,8 +215,8 @@ public class StudentAssignmentConfirmationController implements ActionListener
                         }
                     } catch ( final IOException ex )
                     {
-                        JOptionPane.showMessageDialog( arid, ex.getMessage(), "Roster File Error",
-                            JOptionPane.ERROR_MESSAGE );
+                        JOptionPane.showMessageDialog( arid, ex.getMessage(),
+                            String.format( "%s Error", ROSTER_FILE ), JOptionPane.ERROR_MESSAGE );
                     }
                     break;
                 case COMBINED_PDF:
@@ -229,7 +229,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
                     } catch ( final IOException | IllegalStateException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(),
-                            "Combined Assignment PDF Error", JOptionPane.ERROR_MESSAGE );
+                            String.format( "%s Error", COMBINED_PDF ), JOptionPane.ERROR_MESSAGE );
                     }
                     break;
                 case INDIVIDUAL_PDF_OUTPUT_DIRECTORY:
@@ -240,7 +240,8 @@ public class StudentAssignmentConfirmationController implements ActionListener
                     } catch ( final IOException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(),
-                            "Individual PDF Output Directory Error", JOptionPane.ERROR_MESSAGE );
+                            String.format( "%s Error", INDIVIDUAL_PDF_OUTPUT_DIRECTORY ),
+                            JOptionPane.ERROR_MESSAGE );
                     }
                     break;
                 case INIDIVIDUAL_PDF_NAMING_VARIABLE:
@@ -248,7 +249,14 @@ public class StudentAssignmentConfirmationController implements ActionListener
                         (String) arid.getField( INIDIVIDUAL_PDF_NAMING_VARIABLE ) );
                     break;
                 case PREVIEW_PAGE:
-                    ar.setPreviewPage( (int) arid.getField( PREVIEW_PAGE ) );
+                    try
+                    {
+                        ar.setPreviewPage( (int) arid.getField( PREVIEW_PAGE ) );
+                    } catch ( final IllegalArgumentException ex )
+                    {
+                        JOptionPane.showMessageDialog( arid, ex.getMessage(),
+                            String.format( "%s Error", PREVIEW_PAGE ), JOptionPane.ERROR_MESSAGE );
+                    }
                     break;
                 case FROM_EMAIL:
                     ar.setFromEmail( (String) arid.getField( FROM_EMAIL ) );
@@ -264,7 +272,8 @@ public class StudentAssignmentConfirmationController implements ActionListener
                     } catch ( final IOException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(),
-                            "Email Template Error", JOptionPane.ERROR_MESSAGE );
+                            String.format( "%s Error", EMAIL_TEMPLATE_FILE ),
+                            JOptionPane.ERROR_MESSAGE );
                     }
                     break;
                 case HOST_NAME:
