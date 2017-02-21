@@ -275,6 +275,7 @@ public class AssignmentReturner implements Runnable
     public void setCombinedAssignment( final File combinedAssignment )
     {
         this.combinedAssignment = combinedAssignment;
+        as = null;
     }
 
 
@@ -299,6 +300,7 @@ public class AssignmentReturner implements Runnable
         if ( this.rosterFile == null ^ !rosterFile.equals( this.rosterFile ) )
         {
             changed = true;
+            as = null;
             this.rosterFile = rosterFile;
         }
     }
@@ -321,24 +323,18 @@ public class AssignmentReturner implements Runnable
         }
     }
 
-    /**
-     * @param roster
-     *            the roster to set
-     */
-    public void setRoster( final Roster roster )
-    {
-        this.roster = roster;
-    }
-
     public int getAssignmentLength() throws InvalidPasswordException, IOException
     {
-        final PDDocument ca = PDDocument.load( combinedAssignment );
-        ca.close();
-        if ( roster.getNumberOfRows() == 0 )
-            return 0;
-        return new AssignmentSplitter( ca, outputDirectory,
-                new AssignmentReturnerInterpolator( roster, assignmentName ) )
-                        .getAssignmentLength();
+        if ( as == null )
+        {
+            final PDDocument ca = PDDocument.load( combinedAssignment );
+            ca.close();
+            if ( roster.getNumberOfRows() == 0 )
+                return 0;
+            as = new AssignmentSplitter( ca, outputDirectory,
+                    new AssignmentReturnerInterpolator( roster, assignmentName ) );
+        }
+        return as.getAssignmentLength();
     }
 
     /**
