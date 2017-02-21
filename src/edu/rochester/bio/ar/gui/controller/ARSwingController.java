@@ -59,9 +59,6 @@ public class ARSwingController implements ActionListener
     @Override
     public void actionPerformed( final ActionEvent evt )
     {
-        System.out.println( evt.getActionCommand() );
-        System.out.println( evt.getSource() );
-
         final AssignmentReturner ar = sacc.getAssignmentReturner();
 
         switch ( evt.getActionCommand() )
@@ -90,7 +87,8 @@ public class ARSwingController implements ActionListener
                 }
 
                 // On submission, retrieve new values for model
-                mainInputsDialog.addFocusListener( sacc.getARUpdatingFocusListener( mainInputsDialog ) );
+                mainInputsDialog
+                        .addFocusListener( sacc.getARUpdatingFocusListener( mainInputsDialog ) );
             }
             break;
         case ARSwingView.EMAIL_SETTINGS_LABEL:
@@ -110,12 +108,11 @@ public class ARSwingController implements ActionListener
                 }
 
                 // On submission, retrieve new values for model
-                emailInputsDialog.addFocusListener( sacc.getARUpdatingFocusListener( emailInputsDialog ) );
+                emailInputsDialog
+                        .addFocusListener( sacc.getARUpdatingFocusListener( emailInputsDialog ) );
             }
             break;
         default:
         }
-
-        System.out.println();
     }
 }

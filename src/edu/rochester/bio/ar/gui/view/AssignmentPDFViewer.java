@@ -98,7 +98,7 @@ public class AssignmentPDFViewer extends JPanel
         final PDDocument doc = PDDocument.load( combinedPdf );
         final PDFRenderer pdfRenderer = new PDFRenderer( doc );
         pdfPageImage = pdfRenderer.renderImageWithDPI(
-            ( iteration * assignmentLength ) + previewPage - 1, 500, ImageType.RGB );
+            ( iteration * assignmentLength ) + previewPage - 1, 150, ImageType.RGB );
         pdfPageImagePanel.repaint();
         currentPDFLabel.setText( String.format( CURRENT_PDF_LABEL_FORMAT,
             ( combinedPdf == null ) ? "" : combinedPdf.getAbsolutePath(), previewPage,

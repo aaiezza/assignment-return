@@ -43,19 +43,19 @@ import com.google.common.base.Optional;
  */
 public abstract class ARInputsDialog extends JDialog
 {
-    private static final long               serialVersionUID                    = 1L;
+    private static final long               serialVersionUID      = 1L;
 
     /* Different Dialog Types */
-    public static final int                 MAIN_INPUTS_DIALOG                  = 0;
-    public static final int                 EMAIL_INPUTS_DIALOG                 = 1;
+    public static final int                 MAIN_INPUTS_DIALOG    = 0;
+    public static final int                 EMAIL_INPUTS_DIALOG   = 1;
 
     /* Form fields */
-    public static final String              OK_BUTTON                           = "OK";
+    public static final String              OK_BUTTON             = "OK";
 
     /* Default button components */
-    protected final JButton                 submitAndSplitButton                = new JButton(
-            OK_BUTTON );
+    protected final JButton                 okButton  = new JButton( OK_BUTTON );
     private static final GridBagConstraints OK_BUTTON_CONSTRAINTS = new GridBagConstraints();
+    static
     {
         OK_BUTTON_CONSTRAINTS.gridx = 0;
         OK_BUTTON_CONSTRAINTS.weightx = 1.0;
@@ -138,7 +138,7 @@ public abstract class ARInputsDialog extends JDialog
                     switch ( e.getKeyChar() )
                     {
                     case KeyEvent.VK_ENTER:
-                        submitAndSplitButton.doClick();
+                        okButton.doClick();
                         break;
                     case KeyEvent.VK_ESCAPE:
                         dispose();
@@ -158,7 +158,7 @@ public abstract class ARInputsDialog extends JDialog
         } );
 
         // Always a submit and cancel button
-        add( submitAndSplitButton, OK_BUTTON_CONSTRAINTS );
+        add( okButton, OK_BUTTON_CONSTRAINTS );
 
         UIManager.put( "Button.font", getFont() );
         UIManager.put( "Label.font", getFont() );
@@ -204,7 +204,7 @@ public abstract class ARInputsDialog extends JDialog
     {
         getFields().forEach( f -> f.addFocusListener( listener ) );
 
-        submitAndSplitButton.addActionListener( e -> {
+        okButton.addActionListener( e -> {
             getFields().forEach(
                 f -> listener.focusLost( new FocusEvent( f, FocusEvent.FOCUS_LOST ) ) );
             this.dispose();
