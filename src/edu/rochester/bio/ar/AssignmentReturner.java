@@ -325,16 +325,25 @@ public class AssignmentReturner implements Runnable
 
     public int getAssignmentLength() throws InvalidPasswordException, IOException
     {
-        if ( as == null )
+        return getAssignmentSplitter().getAssignmentLength();
+    }
+
+    public AssignmentSplitter getAssignmentSplitter()
+    {
+        if ( as == null || changed )
         {
-            final PDDocument ca = PDDocument.load( combinedAssignment );
-            ca.close();
-            if ( roster.getNumberOfRows() == 0 )
-                return 0;
-            as = new AssignmentSplitter( ca, outputDirectory,
-                    new AssignmentReturnerInterpolator( roster, assignmentName ) );
+            try
+            {
+                PDDocument ca = PDDocument.load( combinedAssignment );
+                ca.close();
+                as = new AssignmentSplitter( ca, outputDirectory,
+                        new AssignmentReturnerInterpolator( roster, assignmentName ) );
+            } catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
         }
-        return as.getAssignmentLength();
+        return as;
     }
 
     /**
@@ -538,6 +547,21 @@ public class AssignmentReturner implements Runnable
     public boolean hasChanged()
     {
         return changed;
+    }
+
+    public void split() throws IOException
+    {
+        changed = true;
+        getAssignmentSplitter().split();
+        changed = false;
+    }
+
+    public void emailRecipients() throws IOException
+    {
+        changed = true;
+        ae = new AssignmentEmailer( new AssignmentReturnerInterpolator( roster, assignmentName ),
+                emailTemplate, hostName, smtpPort, fromEmail );
+        changed = false;
     }
 
     /**

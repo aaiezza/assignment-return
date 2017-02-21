@@ -38,9 +38,17 @@ public class ARSwingView extends JFrame implements Runnable
 
     private final StudentAssignmentConfirmationView rosterConfirmationSplitPane;
 
+    @SuppressWarnings ( "serial" )
     ARSwingView()
     {
-        this( new StudentAssignmentConfirmationView() );
+        this( new StudentAssignmentConfirmationView()
+        {
+            @Override
+            protected String getRowIdentifier( int row )
+            {
+                return null;
+            }
+        } );
         try
         {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );

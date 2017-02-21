@@ -94,6 +94,11 @@ public class Roster
         roster.rowMap().remove( rowNumber );
     }
 
+    public List<Integer> getRowOrder()
+    {
+        return rowOrder;
+    }
+
     public void setRowOrder( final List<Integer> rowOrder )
     {
         if ( this.rowOrder.size() != rowOrder.size() )

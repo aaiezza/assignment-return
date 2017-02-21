@@ -5,18 +5,22 @@ package edu.rochester.bio.ar.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.beans.PropertyChangeListener;
-import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.RowFilter;
 import javax.swing.RowSorter.SortKey;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.event.ListSelectionListener;
 
 import org.jdesktop.swingx.JXTable;
+
+import com.beust.jcommander.internal.Maps;
+
+import edu.rochester.bio.ar.gui.controller.StudentAssignmentConfirmationController.RosterTableModel;
 
 /**
  * @author Alex Aiezza
@@ -67,24 +71,58 @@ public class RosterView extends JPanel
                 .setText( String.format( CURRENT_ROSTER_FILE_LABEL_FORMAT, currentRosterFile ) );
     }
 
-    public void setRosterTable( final AbstractTableModel tableModel )
+    public void setRosterTable( final RosterTableModel tableModel )
     {
         rosterTable.setModel( tableModel );
         rosterTable.updateUI();
         rosterTable.setHorizontalScrollEnabled( false );
         rosterTable.setColumnControlVisible( true );
         rosterTable.setEditable( false );
+        rosterTable.setRowSelectionAllowed( true );
         rosterTable.packAll();
+
+        final ListSelectionListener lsl = e -> {
+            if ( rosterTable.getSelectedRow() >= e.getLastIndex() )
+                setSelectedRow( e.getLastIndex() );
+            else setSelectedRow( e.getFirstIndex() );
+        };
+
+        rosterTable.getSelectionModel().addListSelectionListener( lsl );
     }
 
-    public void addEventListener( final EventListener listener )
+    public RosterTableModel getTableModel()
     {
-        rosterTable.addPropertyChangeListener( (PropertyChangeListener) listener );
-        currentRosterLabel.addPropertyChangeListener( (PropertyChangeListener) listener );
+        return (RosterTableModel) rosterTable.getModel();
     }
 
     public void applySort( List<? extends SortKey> sorters )
     {
         rosterTable.getRowSorter().setSortKeys( sorters );
+    }
+
+    void adjustFilter( final String filter )
+    {
+        if ( filter.length() == 0 )
+            rosterTable.setRowFilter( null );
+        rosterTable.setRowFilter( RowFilter.regexFilter( String.format( "(?i)^%s.*", filter ) ) );
+        setSelectedRow( 0 );
+    }
+
+    public int getSelectedRow()
+    {
+        if ( ! ( rosterTable.getModel() instanceof RosterTableModel ) )
+            return rosterTable.getSelectedRow();
+
+        final Map<String, String> values = Maps.newHashMap();
+        for ( int c = 0; c < rosterTable.getModel().getColumnCount(); c++ )
+            values.put( rosterTable.getModel().getColumnName( c ),
+                (String) rosterTable.getValueAt( rosterTable.getSelectedRow(), c ) );
+        return getTableModel().getRowFromValues( values );
+    }
+
+    public void setSelectedRow( int row )
+    {
+        if ( row >= 0 && row < rosterTable.getRowCount() &&  rosterTable.getRowCount() > 0 )
+            rosterTable.setRowSelectionInterval( row, row );
     }
 }

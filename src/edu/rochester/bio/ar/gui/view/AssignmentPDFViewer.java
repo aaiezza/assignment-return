@@ -112,6 +112,35 @@ public class AssignmentPDFViewer extends JPanel
         return currentIteration.get();
     }
 
+    public void next()
+    {
+        try
+        {
+            if ( getCurrentIteration() + 1 < numberOfPages / assignmentLength )
+                setCurrentIteration( getCurrentIteration() + 1 );
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void back()
+    {
+        try
+        {
+            if ( getCurrentIteration() > 0 )
+                setCurrentIteration( getCurrentIteration() - 1 );
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean onLast()
+    {
+        return getCurrentIteration() + 1 >= numberOfPages / assignmentLength;
+    }
+
     public BufferedImage getPdfPageImage()
     {
         return pdfPageImage;

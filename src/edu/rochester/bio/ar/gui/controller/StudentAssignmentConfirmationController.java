@@ -24,7 +24,9 @@ import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,8 @@ import javax.swing.JTextField;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.table.AbstractTableModel;
+
+import com.beust.jcommander.internal.Lists;
 
 import edu.rochester.bio.ar.AssignmentReturner;
 import edu.rochester.bio.ar.Roster;
@@ -57,17 +61,31 @@ public class StudentAssignmentConfirmationController implements ActionListener
 
     private final StudentAssignmentConfirmationView sacv;
 
+    private List<Integer>                           rowOrderOfAssignments;
+
     /**
      * 
      */
+    @SuppressWarnings ( "serial" )
     public StudentAssignmentConfirmationController( ARSwingController arsc )
     {
         this.arsc = arsc;
         ar = new AssignmentReturner();
         confirmingStudent = new AtomicInteger();
 
-        sacv = new StudentAssignmentConfirmationView();
-        // sacv.addEventListener( this );
+        sacv = new StudentAssignmentConfirmationView()
+        {
+            @Override
+            protected String getRowIdentifier( final int row )
+            {
+                if ( row < 0 || row > ar.getRoster().getNumberOfRows() )
+                    return "";
+                final String firstname = ar.getRoster().get( row, Roster.FIRST_NAME_HEADER ),
+                        lastname = ar.getRoster().get( row, Roster.LAST_NAME_HEADER );
+                return String.format( "%s %s", firstname, lastname );
+            }
+        };
+        sacv.addActionListener( this );
     }
 
     public AssignmentReturner getAssignmentReturner()
@@ -104,62 +122,31 @@ public class StudentAssignmentConfirmationController implements ActionListener
     @Override
     public void actionPerformed( final ActionEvent evt )
     {
-        // TODO Auto-generated method stub
-
+        switch ( evt.getActionCommand() )
+        {
+        case StudentAssignmentConfirmationView.CONFIRM_BUTTON:
+            rowOrderOfAssignments.set( sacv.getPdfView().getCurrentIteration(),
+                sacv.getRosterView().getSelectedRow() );
+            if ( sacv.getPdfView().onLast() && JOptionPane.showConfirmDialog( sacv,
+                "Finished relating assignments to students. Would you like to split and email assignments?",
+                "Finished assigning", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
+            {
+                ar.getRoster().setRowOrder( rowOrderOfAssignments );
+                // TODO fire off the splitter and emailer!
+                System.out.println( "Split up the file accoringly and email the students" );
+                JOptionPane.showMessageDialog( sacv,
+                    "Combined assignment has been split, and students have been emailed." );
+            }
+            break;
+        case StudentAssignmentConfirmationView.UNCONFIRM_BUTTON:
+            rowOrderOfAssignments.set( sacv.getPdfView().getCurrentIteration(), -1 );
+            break;
+        }
     }
 
-    @SuppressWarnings ( "serial" )
-    AbstractTableModel getRosterTableModel()
+    RosterTableModel getRosterTableModel()
     {
-        return new AbstractTableModel()
-        {
-            private final Roster roster = ar.getRoster();
-            {
-                addTableModelListener( tce -> {
-                    System.out.println();
-                    System.out.println( tce.getSource() );
-                    System.out.println();
-                } );
-            }
-
-            @Override
-            public int getRowCount()
-            {
-                return roster.getNumberOfRows();
-            }
-
-            @Override
-            public int getColumnCount()
-            {
-                return roster.columnKeySet().size();
-            }
-
-            @Override
-            public String getColumnName( int column )
-            {
-                return roster.columnKeySet().stream().skip( column ).findFirst().get();
-            }
-
-            @Override
-            public int findColumn( final String columnName )
-            {
-                return roster.findColumn( columnName );
-            }
-
-            @Override
-            public Class<?> getColumnClass( int columnIndex )
-            {
-                return String.class;
-            }
-
-            @Override
-            public Object getValueAt( int rowIndex, int columnIndex )
-            {
-                return roster.get( rowIndex + 1, getColumnName( columnIndex ) );
-            }
-
-
-        };
+        return new RosterTableModel();
     }
 
     FocusListener getARUpdatingFocusListener( final ARInputsDialog arid )
@@ -205,6 +192,10 @@ public class StudentAssignmentConfirmationController implements ActionListener
                                 .setCurrentRosterLabel( ar.getRosterFile().getAbsolutePath() );
                         boolean changed = ar.hasChanged();
                         ar.updateRoster();
+
+                        rowOrderOfAssignments = Lists.newArrayList( ar.getRoster().getRowOrder() );
+                        for ( int i = 0; i < rowOrderOfAssignments.size(); i++ )
+                            rowOrderOfAssignments.set( i, -1 );
                         if ( changed )
                         {
                             sacv.getRosterView().setRosterTable( getRosterTableModel() );
@@ -213,6 +204,8 @@ public class StudentAssignmentConfirmationController implements ActionListener
                                             ar.getRoster().findColumn( Roster.LAST_NAME_HEADER ),
                                             SortOrder.ASCENDING ) ) );
                         }
+                        if ( ar.getRoster() != null && ar.getCombinedAssignment() != null )
+                            sacv.updateConfirmingAssignments( true );
                     } catch ( final IOException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(),
@@ -226,6 +219,8 @@ public class StudentAssignmentConfirmationController implements ActionListener
                             new File( (String) arid.getField( COMBINED_PDF ) ) );
                         sacv.getPdfView().updateView( ar.getCombinedAssignment(),
                             ar.getPreviewPage(), ar.getAssignmentLength() );
+                        if ( ar.getRoster() != null && ar.getCombinedAssignment() != null )
+                            sacv.updateConfirmingAssignments( true );
                     } catch ( final IOException | IllegalStateException ex )
                     {
                         JOptionPane.showMessageDialog( arid, ex.getMessage(),
@@ -291,5 +286,67 @@ public class StudentAssignmentConfirmationController implements ActionListener
                 e.getComponent().setBackground( new Color( 30, 200, 140 ) );
             }
         };
+    }
+
+    @SuppressWarnings ( "serial" )
+    public class RosterTableModel extends AbstractTableModel
+    {
+        private final Roster roster = ar.getRoster();
+        {
+            addTableModelListener( tce -> {
+                System.out.println();
+                System.out.println( tce.getSource() );
+                System.out.println();
+            } );
+        }
+
+        @Override
+        public int getRowCount()
+        {
+            return roster.getNumberOfRows();
+        }
+
+        @Override
+        public int getColumnCount()
+        {
+            return roster.columnKeySet().size();
+        }
+
+        @Override
+        public String getColumnName( int column )
+        {
+            return roster.columnKeySet().stream().skip( column ).findFirst().get();
+        }
+
+        @Override
+        public int findColumn( final String columnName )
+        {
+            return roster.findColumn( columnName );
+        }
+
+        @Override
+        public Class<?> getColumnClass( int columnIndex )
+        {
+            return String.class;
+        }
+
+        @Override
+        public Object getValueAt( int rowIndex, int columnIndex )
+        {
+            return roster.get( rowIndex + 1, getColumnName( columnIndex ) );
+        }
+
+        public int getRowFromValues( final Map<String, String> values )
+        {
+            for ( int r = 1; r <= roster.getNumberOfRows(); r++ )
+            {
+                final AtomicBoolean equal = new AtomicBoolean( true );
+                roster.getRow( r ).forEach( ( field, value ) -> equal
+                        .set( equal.get() && values.get( field ).equals( value ) ) );
+                if ( equal.get() )
+                    return r;
+            }
+            return -1;
+        }
     }
 }
