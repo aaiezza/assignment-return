@@ -82,7 +82,7 @@ public class AssignmentSplitter
 
             individualPDFs.get( i ).save( pdfName );
 
-            ari.getRoster().put( i, PDF_PATH_COLUMN, pdfName );
+            ari.getRoster().put( i + 1, PDF_PATH_COLUMN, pdfName );
         }
 
         combinedAssignment.close();

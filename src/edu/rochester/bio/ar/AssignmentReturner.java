@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.mail.EmailException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
@@ -126,7 +127,7 @@ public class AssignmentReturner implements Runnable
     { "-p", "--port" },
         description = "The SMTP port for the given hostname",
         required = true )
-    private int                            smtpPort                                       = 567;
+    private int                            smtpPort                                       = 587;
 
     @Parameter (
         names =
@@ -556,11 +557,12 @@ public class AssignmentReturner implements Runnable
         changed = false;
     }
 
-    public void emailRecipients() throws IOException
+    public void emailRecipients() throws IOException, EmailException
     {
         changed = true;
         ae = new AssignmentEmailer( new AssignmentReturnerInterpolator( roster, assignmentName ),
                 emailTemplate, hostName, smtpPort, fromEmail );
+        ae.sendEmails( password );
         changed = false;
     }
 

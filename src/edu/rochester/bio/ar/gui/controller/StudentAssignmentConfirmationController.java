@@ -132,15 +132,14 @@ public class StudentAssignmentConfirmationController implements ActionListener
                 "Finished assigning", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
             {
                 ar.getRoster().setRowOrder( rowOrderOfAssignments );
-                // TODO fire off the splitter and emailer!
-                System.out.println( "Split up the file accoringly and email the students" );
-                JOptionPane.showMessageDialog( sacv,
-                    "Combined assignment has been split, and students have been emailed." );
+
+                sacv.updateConfirmingAssignments( false );
             }
             break;
         case StudentAssignmentConfirmationView.UNCONFIRM_BUTTON:
             rowOrderOfAssignments.set( sacv.getPdfView().getCurrentIteration(), -1 );
             break;
+
         }
     }
 

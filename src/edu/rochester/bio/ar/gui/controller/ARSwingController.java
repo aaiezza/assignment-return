@@ -17,9 +17,13 @@ import static edu.rochester.bio.ar.gui.view.dialogs.MainInputsDialog.ROSTER_FILE
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Optional;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.mail.EmailException;
 
 import edu.rochester.bio.ar.AssignmentReturner;
 import edu.rochester.bio.ar.gui.view.ARSwingView;
@@ -111,6 +115,30 @@ public class ARSwingController implements ActionListener
                 emailInputsDialog
                         .addFocusListener( sacc.getARUpdatingFocusListener( emailInputsDialog ) );
             }
+            break;
+        case ARSwingView.SPLIT_MENU:
+            try
+            {
+                ar.split();
+            } catch ( IOException e )
+            {
+                arsv.alertUser( e );
+                break;
+            }
+            JOptionPane.showMessageDialog( sacc.getStudentAssignmentConfirmationView(),
+                "Combined assignment has been split." );
+            break;
+        case ARSwingView.EMAIL_MENU:
+            try
+            {
+                ar.emailRecipients();
+            } catch ( IOException | EmailException e )
+            {
+                arsv.alertUser( e );
+                break;
+            }
+            JOptionPane.showMessageDialog( sacc.getStudentAssignmentConfirmationView(),
+                "Split assignment has been emailed to students." );
             break;
         default:
         }

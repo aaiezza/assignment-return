@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -35,6 +36,13 @@ public class ARSwingView extends JFrame implements Runnable
 
     private final JMenuItem                         arMainInputs      = new JMenuItem(
             MAIN_INPUTS_LABEL ), arEmailInputs = new JMenuItem( EMAIL_SETTINGS_LABEL );
+
+
+    public static final String                      SPLIT_MENU        = "Split Assignment";
+    public static final String                      EMAIL_MENU        = "Email Students";
+
+    private final JMenuItem                         splitMenu         = new JMenuItem( SPLIT_MENU );
+    private final JMenuItem                         emailMenu         = new JMenuItem( EMAIL_MENU );
 
     private final StudentAssignmentConfirmationView rosterConfirmationSplitPane;
 
@@ -77,16 +85,25 @@ public class ARSwingView extends JFrame implements Runnable
 
         getContentPane().setBackground( new Color( 20, 20, 70 ) );
         getContentPane().setFont( new Font( "Verdana", Font.PLAIN, 11 ) );
-        getContentPane().setLayout( new BorderLayout( 0, 0 ) );
+        setLayout( new BorderLayout( 0, 0 ) );
 
-        getContentPane().add( menuBar, BorderLayout.NORTH );
+        setJMenuBar( menuBar );
+        // getContentPane().add( menuBar, BorderLayout.NORTH );
         menuBar.add( arSettingsMenu );
         arSettingsMenu.add( arMainInputs );
         arSettingsMenu.add( arEmailInputs );
+        menuBar.add( splitMenu );
+        menuBar.add( emailMenu );
 
         getContentPane().add( rosterConfirmationSplitPane, BorderLayout.CENTER );
 
         setVisible( true );
+    }
+
+    @Override
+    public JMenuBar getJMenuBar()
+    {
+        return menuBar;
     }
 
     public void setTitle()
@@ -124,5 +141,12 @@ public class ARSwingView extends JFrame implements Runnable
     {
         arMainInputs.addActionListener( listener );
         arEmailInputs.addActionListener( listener );
+        splitMenu.addActionListener( listener );
+        emailMenu.addActionListener( listener );
+    }
+
+    public void alertUser( Exception e )
+    {
+        JOptionPane.showMessageDialog( this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
     }
 }

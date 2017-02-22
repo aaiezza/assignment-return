@@ -34,7 +34,7 @@ public class AssignmentEmailerTest
     public static void initClass() throws IOException
     {
         // this roster already has pdf locations in it
-        roster = RosterFileParser.parseRoster( "test_resources/test_roster.txt" );
+        roster = RosterFileParser.parseRoster( "test_resources/roster.txt" );
         assignment = "Quiz1";
         emailTemplate = new File( "test_resources/template.txt" );
 

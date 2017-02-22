@@ -296,7 +296,11 @@ public abstract class StudentAssignmentConfirmationView extends JSplitPane
             }
         } else if ( rosterPanel.getTableModel().getRowCount() > 0 )
         {
-            backArrow.setEnabled( rosterPanel.getSelectedRow() >= 1 );
+            // rosterPanel.setSelectedRow( 0 );
+            // rosterFilter.setEnabled( false );
+            // forwardArrow.setEnabled( false );
+            // confirmButton.setEnabled( false );
+            // backArrow.setEnabled( false );
         }
     }
 

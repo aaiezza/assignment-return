@@ -11,7 +11,10 @@ import static edu.rochester.bio.ar.Roster.PDF_PATH_COLUMN;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
@@ -66,12 +69,14 @@ public class AssignmentEmailer
         final List<String> subjectLines = ariEmailTemplate.convert( subjectMessage );
         final List<String> emailBodies = ariEmailTemplate.convert( bodyMessage );
 
+        final Iterator<Entry<Integer, Map<String, String>>> rost = roster.rowMap().entrySet()
+                .iterator();
         for ( int i = 0, r = 1; i < roster.rowMap().size(); i++, r++ )
         {
             // Prep email
             final String subject = subjectLines.get( i );
             final String body = emailBodies.get( i );
-            final File pdfAttachment = new File( roster.get( r, PDF_PATH_COLUMN ) );
+            final File pdfAttachment = new File( rost.next().getValue().get( PDF_PATH_COLUMN ) );
             final String studentName = String.format( "%s %s", roster.get( r, FIRST_NAME_HEADER ),
                 roster.get( r, LAST_NAME_HEADER ) );
 

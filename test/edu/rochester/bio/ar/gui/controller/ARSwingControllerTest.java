@@ -39,6 +39,8 @@ public class ARSwingControllerTest
         ar.setRosterFile( FileUtils.getFile( ar.getRosterFile().getParentFile(), "roster.txt" ) );
         ar.setCombinedAssignment( FileUtils.getFile( ar.getCombinedAssignment().getParentFile(),
             "combinedAssignment.pdf" ) );
+        ar.setEmailTemplate( new File( "template.txt" ) );
+        ar.setFromEmail( "aaiezza@ur.rochester.edu" );
     }
 
     @Test
