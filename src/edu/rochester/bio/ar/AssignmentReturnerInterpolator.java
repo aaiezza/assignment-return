@@ -74,8 +74,8 @@ public class AssignmentReturnerInterpolator
     private final VariableField                  splitOccuranceVariable   = new VariableField( "#",
             ( f, e ) ->
     {
-        long width =  (long) Math.ceil( Math.log10( (double) getRoster().rowMap().size() + 1 ) );
-        return String.format( "%0" + width + "d", e.getKey() );
+        long width =  (long) Math.ceil( Math.log10( (double) getRoster().getNumberOfRows() + 1 ) );
+        return String.format( "%0" + width + "d", e.getKey()+1 );
     } );
     
     private final VariableField                  timestampVariable        = new VariableField(

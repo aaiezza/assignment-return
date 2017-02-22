@@ -71,7 +71,7 @@ public class AssignmentEmailer
 
         final Iterator<Entry<Integer, Map<String, String>>> rost = roster.rowMap().entrySet()
                 .iterator();
-        for ( int i = 0, r = 1; i < roster.rowMap().size(); i++, r++ )
+        for ( int i = 0, r = 0; r < roster.getNumberOfRows(); i++, r++ )
         {
             // Prep email
             final String subject = subjectLines.get( i );

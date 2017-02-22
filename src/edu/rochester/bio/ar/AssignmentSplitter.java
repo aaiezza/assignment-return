@@ -57,7 +57,7 @@ public class AssignmentSplitter
 
         if ( difference > 0 )
             throw new IllegalStateException( String.format( ILLEGAL_ASSIGNMENT_LENGTH_FORMAT,
-                combinedAssignment.getNumberOfPages(), ari.getRoster().rowMap().size(),
+                combinedAssignment.getNumberOfPages(), ari.getRoster().getNumberOfRows(),
                 difference ) );
 
         return assignmentLength;
@@ -82,7 +82,7 @@ public class AssignmentSplitter
 
             individualPDFs.get( i ).save( pdfName );
 
-            ari.getRoster().put( i + 1, PDF_PATH_COLUMN, pdfName );
+            ari.getRoster().put( i, PDF_PATH_COLUMN, pdfName );
         }
 
         combinedAssignment.close();

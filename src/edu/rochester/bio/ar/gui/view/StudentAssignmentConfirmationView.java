@@ -52,7 +52,8 @@ public abstract class StudentAssignmentConfirmationView extends JSplitPane
             public void setSelectedRow( int row )
             {
                 super.setSelectedRow( row );
-                confirmedStudent.setText( getRowIdentifier( this.getSelectedRow() ) );
+                // confirmedStudent.setText( getRowIdentifier(
+                // this.getSelectedTableModelRow() ) );
             }
         };
     }
@@ -296,11 +297,12 @@ public abstract class StudentAssignmentConfirmationView extends JSplitPane
             }
         } else if ( rosterPanel.getTableModel().getRowCount() > 0 )
         {
-            // rosterPanel.setSelectedRow( 0 );
-            // rosterFilter.setEnabled( false );
+            rosterFilter.setText( "" );
+            rosterPanel.setSelectedRow( 0 );
+            rosterFilter.setEnabled( false );
             // forwardArrow.setEnabled( false );
             // confirmButton.setEnabled( false );
-            // backArrow.setEnabled( false );
+            backArrow.setEnabled( false );
         }
     }
 

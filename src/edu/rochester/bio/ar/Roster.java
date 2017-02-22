@@ -26,32 +26,29 @@ import com.google.common.collect.TreeBasedTable;
 public class Roster
 {
     /* Default header values */
-    public static final String                            FIRST_NAME_HEADER      = "firstname";
+    public static final String                      FIRST_NAME_HEADER      = "firstname";
 
-    public static final String                            LAST_NAME_HEADER       = "lastname";
+    public static final String                      LAST_NAME_HEADER       = "lastname";
 
-    public static final String                            EMAIL_HEADER           = "email";
+    public static final String                      EMAIL_HEADER           = "email";
 
     /* Header values that are added and used internally */
-    public static final String                            PDF_PATH_COLUMN        = "pdflocation";
+    public static final String                      PDF_PATH_COLUMN        = "pdflocation";
 
     /* Required fields */
-    public static final String []                         REQUIRED_ROSTER_FIELDS = {
-            FIRST_NAME_HEADER, LAST_NAME_HEADER, EMAIL_HEADER };
+    public static final String []                   REQUIRED_ROSTER_FIELDS = { FIRST_NAME_HEADER,
+            LAST_NAME_HEADER, EMAIL_HEADER };
 
-    private final TreeBasedTable<Integer, String, String> roster;
+    private TreeBasedTable<Integer, String, String> roster;
 
-    private final List<String>                            headerOrder            = Lists
-            .newArrayList();
+    private final List<String>                      headerOrder            = Lists.newArrayList();
 
-    private final List<Integer>                           rowOrder               = Lists
-            .newArrayList();
+    private final List<Integer>                     rowOrder               = Lists.newArrayList();
 
     public Roster()
     {
         roster = TreeBasedTable.create(
             Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder ).compare( o1, o2 ) ),
-            // Ordering.natural(),
             Ordering.from( ( o1, o2 ) -> Ordering.explicit( headerOrder ).compare( o1, o2 ) ) );
     }
 
@@ -104,8 +101,15 @@ public class Roster
         if ( this.rowOrder.size() != rowOrder.size() )
             throw new IllegalArgumentException( String.format(
                 "The size of the list of order of rows must be exactly %d", getNumberOfRows() ) );
+
         this.rowOrder.clear();
         this.rowOrder.addAll( rowOrder );
+
+
+        // TODO not going to work without remaking the whole damn thing
+        roster = TreeBasedTable.create(
+            Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder ).compare( o1, o2 ) ),
+            Ordering.from( ( o1, o2 ) -> Ordering.explicit( headerOrder ).compare( o1, o2 ) ) );
     }
 
     public static Roster create()

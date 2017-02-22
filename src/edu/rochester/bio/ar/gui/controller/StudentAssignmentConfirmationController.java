@@ -36,7 +36,7 @@ import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.table.AbstractTableModel;
 
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 
 import edu.rochester.bio.ar.AssignmentReturner;
 import edu.rochester.bio.ar.Roster;
@@ -126,7 +126,7 @@ public class StudentAssignmentConfirmationController implements ActionListener
         {
         case StudentAssignmentConfirmationView.CONFIRM_BUTTON:
             rowOrderOfAssignments.set( sacv.getPdfView().getCurrentIteration(),
-                sacv.getRosterView().getSelectedRow() );
+                sacv.getRosterView().getSelectedTableModelRow() );
             if ( sacv.getPdfView().onLast() && JOptionPane.showConfirmDialog( sacv,
                 "Finished relating assignments to students. Would you like to split and email assignments?",
                 "Finished assigning", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
@@ -145,6 +145,8 @@ public class StudentAssignmentConfirmationController implements ActionListener
 
     RosterTableModel getRosterTableModel()
     {
+        // TODO Test changing the row order here
+        ar.getRoster().setRowOrder( Arrays.asList( 0, 2, 1 ) );
         return new RosterTableModel();
     }
 
@@ -332,12 +334,12 @@ public class StudentAssignmentConfirmationController implements ActionListener
         @Override
         public Object getValueAt( int rowIndex, int columnIndex )
         {
-            return roster.get( rowIndex + 1, getColumnName( columnIndex ) );
+            return roster.get( rowIndex, getColumnName( columnIndex ) );
         }
 
         public int getRowFromValues( final Map<String, String> values )
         {
-            for ( int r = 1; r <= roster.getNumberOfRows(); r++ )
+            for ( int r = 0; r < roster.getNumberOfRows(); r++ )
             {
                 final AtomicBoolean equal = new AtomicBoolean( true );
                 roster.getRow( r ).forEach( ( field, value ) -> equal

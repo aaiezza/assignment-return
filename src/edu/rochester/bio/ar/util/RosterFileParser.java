@@ -49,7 +49,7 @@ public class RosterFileParser
             for ( int v = 0; v < row.size(); v++ )
             {
                 final int value = v;
-                roster.put( new Long( row.getRecordNumber() ).intValue(),
+                roster.put( (int) row.getRecordNumber() - 1,
                     rosterParser.getHeaderMap().entrySet().stream()
                             .filter( e -> e.getValue().intValue() == value ).findFirst().get()
                             .getKey(),

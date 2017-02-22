@@ -143,7 +143,7 @@ public class AssignmentSplitterTest
                 f.getFileName().toString() );
             return f;
         } ).count();
-        assertEquals( roster.getNumberOfRows() - 1, numberOfFiles );
+        assertEquals( roster.getNumberOfRows(), numberOfFiles );
     }
 
     @After

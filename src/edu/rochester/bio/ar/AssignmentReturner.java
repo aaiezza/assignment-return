@@ -318,6 +318,7 @@ public class AssignmentReturner implements Runnable
     {
         if ( changed )
         {
+            // TODO quiet this down
             System.out.println( "Updating roster" );
             roster = RosterFileParser.parseRoster( getRosterFile(), getRosterDelimiter() );
             changed = false;

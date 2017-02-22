@@ -110,6 +110,11 @@ public class RosterView extends JPanel
 
     public int getSelectedRow()
     {
+        return rosterTable.getSelectedRow();
+    }
+
+    public int getSelectedTableModelRow()
+    {
         if ( ! ( rosterTable.getModel() instanceof RosterTableModel ) )
             return rosterTable.getSelectedRow();
 
@@ -122,7 +127,7 @@ public class RosterView extends JPanel
 
     public void setSelectedRow( int row )
     {
-        if ( row >= 0 && row < rosterTable.getRowCount() &&  rosterTable.getRowCount() > 0 )
+        if ( row >= 0 && row < rosterTable.getRowCount() && rosterTable.getRowCount() > 0 )
             rosterTable.setRowSelectionInterval( row, row );
     }
 }

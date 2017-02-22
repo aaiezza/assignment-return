@@ -117,13 +117,13 @@ public class AssignmentReturnerInterpolatorTest
 
         ari = new AssignmentReturnerInterpolator( message, roster, assignment );
         final List<String> interpMessage = ari.convert();
-        assertEquals(
-            IntStream.rangeClosed( 1, roster.rowMap().size() )
-                    .mapToObj( i -> String.format(
-                        "%0" + (long) Math
-                                .ceil( Math.log10( (double) roster.rowMap().size() + 1 ) ) + "d",
-                        i ) )
-                    .collect( Collectors.toList() ),
+        assertEquals( IntStream.rangeClosed( 0,
+            roster.getNumberOfRows() )
+                .mapToObj( i -> String.format( "%0" +
+                        (long) Math.ceil( Math.log10( (double) roster.getNumberOfRows() + 1 ) ) +
+                        "d",
+                    i ) )
+                .collect( Collectors.toList() ),
             interpMessage );
     }
 
@@ -135,7 +135,7 @@ public class AssignmentReturnerInterpolatorTest
 
         ari = new AssignmentReturnerInterpolator( message, roster, assignment );
         final List<String> interpMessage = ari.convert();
-        assertEquals( IntStream.rangeClosed( 1, roster.rowMap().size() )
+        assertEquals( IntStream.rangeClosed( 0, roster.getNumberOfRows() )
                 .mapToObj( i -> new SimpleDateFormat( format ).format( new Date() ) )
                 .collect( Collectors.toList() ),
             interpMessage );
@@ -148,8 +148,8 @@ public class AssignmentReturnerInterpolatorTest
 
         ari = new AssignmentReturnerInterpolator( message, roster, assignment );
         final List<String> interpMessage = ari.convert();
-        assertEquals( IntStream.rangeClosed( 1, roster.rowMap().size() ).mapToObj( i -> assignment )
-                .collect( Collectors.toList() ),
+        assertEquals( IntStream.rangeClosed( 0, roster.getNumberOfRows() )
+                .mapToObj( i -> assignment ).collect( Collectors.toList() ),
             interpMessage );
     }
 
@@ -193,7 +193,7 @@ public class AssignmentReturnerInterpolatorTest
 
         ari = new AssignmentReturnerInterpolator( message, roster, assignment );
         final List<String> interpMessage = ari.convert();
-        assertEquals( IntStream.rangeClosed( 1, roster.rowMap().size() ).mapToObj( i -> "*" )
+        assertEquals( IntStream.rangeClosed( 1, roster.getNumberOfRows() ).mapToObj( i -> "*" )
                 .collect( Collectors.toList() ),
             interpMessage );
     }
