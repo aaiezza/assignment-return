@@ -131,18 +131,19 @@ public class AssignmentSplitterTest
 
         aspl.split();
 
-        long width = (long) Math.ceil( Math.log10( (double) roster.rowMap().size() + 1 ) );
+        long width = (long) Math.ceil( Math.log10( (double) roster.getNumberOfRows() + 1 ) );
 
         // Make sure the files are there
         final AtomicInteger fileIndex = new AtomicInteger( 1 );
-        assertEquals( roster.rowMap().size(), Files.list( outputDirectory.toPath() ).map( f -> {
+        long numberOfFiles = Files.list( outputDirectory.toPath() ).map( f -> {
             assertEquals(
                 String.format( "%0" + width + "d_%s-%s_%s.pdf", fileIndex.get(),
                     roster.get( fileIndex.get(), "lastname" ),
                     roster.get( fileIndex.getAndIncrement(), "firstname" ), assignment ),
                 f.getFileName().toString() );
             return f;
-        } ).count() );
+        } ).count();
+        assertEquals( roster.getNumberOfRows() - 1, numberOfFiles );
     }
 
     @After

@@ -36,10 +36,9 @@ public class ARSwingControllerTest
         assignment = "Quiz1";
         ar = new AssignmentReturner();
         ar.setAssignmentName( assignment );
-        ar.setRosterFile(
-            FileUtils.getFile( ar.getRosterFile().getParentFile(), "20170131_roster.txt" ) );
-        ar.setCombinedAssignment(
-            FileUtils.getFile( ar.getCombinedAssignment().getParentFile(), "combined_Quiz1.pdf" ) );
+        ar.setRosterFile( FileUtils.getFile( ar.getRosterFile().getParentFile(), "roster.txt" ) );
+        ar.setCombinedAssignment( FileUtils.getFile( ar.getCombinedAssignment().getParentFile(),
+            "combinedAssignment.pdf" ) );
     }
 
     @Test

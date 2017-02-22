@@ -7,6 +7,7 @@ import static java.util.Arrays.asList;
 
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -61,13 +62,13 @@ import com.google.common.collect.Lists;
  */
 public class AssignmentReturnerInterpolator
 {
-    public static final String          START_VARIABLE_DELIMITER = "\\{\\{";
-    public static final String          END_VARIABLE_DELIMITER   = "\\}\\}";
+    public static final String        START_VARIABLE_DELIMITER = "\\{\\{";
+    public static final String        END_VARIABLE_DELIMITER   = "\\}\\}";
 
-    public static final String          DEFUALT_MESSAGE          = "{{#}}_{{lastname}}-{{firstname}}_{{ASSIGNMENT}}";
+    public static final String        DEFUALT_MESSAGE          = "{{#}}_{{lastname}}-{{firstname}}_{{ASSIGNMENT}}";
 
     /* The VariableField Interpolators */
-    private final Stream<VariableField> variableFieldMatchers;
+    private final List<VariableField> variableFieldMatchers;
 
     // @formatter:off
     private final VariableField                  splitOccuranceVariable   = new VariableField( "#",
@@ -90,9 +91,9 @@ public class AssignmentReturnerInterpolator
     private final VariableField                  tableHeaderVariable;
     // @formatter:on
 
-    private final String                assignment;
-    private String                      message;
-    private final Roster                roster;
+    private final String              assignment;
+    private String                    message;
+    private final Roster              roster;
 
     /**
      * @param roster
@@ -126,7 +127,7 @@ public class AssignmentReturnerInterpolator
         tableHeaderVariable = new VariableField( tableHeaderRegex.toString(),
                 ( f, e ) -> e.getValue().get( f ) );
 
-        variableFieldMatchers = Stream.of( splitOccuranceVariable, timestampVariable,
+        variableFieldMatchers = Arrays.asList( splitOccuranceVariable, timestampVariable,
             assignmentVariable, tableHeaderVariable );
     }
 
@@ -237,7 +238,7 @@ public class AssignmentReturnerInterpolator
 
     private Optional<VariableField> match( final String field )
     {
-        return variableFieldMatchers.filter( fR -> {
+        return variableFieldMatchers.stream().filter( fR -> {
             return field.matches( fR.fieldRegex );
         } ).findFirst();
     }
