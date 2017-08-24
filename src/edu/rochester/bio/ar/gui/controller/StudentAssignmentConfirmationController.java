@@ -145,8 +145,6 @@ public class StudentAssignmentConfirmationController implements ActionListener
 
     RosterTableModel getRosterTableModel()
     {
-        // TODO Test changing the row order here
-        ar.getRoster().setRowOrder( Arrays.asList( 0, 2, 1 ) );
         return new RosterTableModel();
     }
 
@@ -194,9 +192,9 @@ public class StudentAssignmentConfirmationController implements ActionListener
                         boolean changed = ar.hasChanged();
                         ar.updateRoster();
 
-                        rowOrderOfAssignments = Lists.newArrayList( ar.getRoster().getRowOrder() );
-                        for ( int i = 0; i < rowOrderOfAssignments.size(); i++ )
-                            rowOrderOfAssignments.set( i, -1 );
+                        rowOrderOfAssignments = Lists.newArrayList();
+                        for ( int i = 0; i < ar.getRoster().getNumberOfRows(); i++ )
+                            rowOrderOfAssignments.add( -1 );
                         if ( changed )
                         {
                             sacv.getRosterView().setRosterTable( getRosterTableModel() );
@@ -341,9 +339,10 @@ public class StudentAssignmentConfirmationController implements ActionListener
         {
             for ( int r = 0; r < roster.getNumberOfRows(); r++ )
             {
+                final int row = r;
                 final AtomicBoolean equal = new AtomicBoolean( true );
-                roster.getRow( r ).forEach( ( field, value ) -> equal
-                        .set( equal.get() && values.get( field ).equals( value ) ) );
+                values.forEach( ( field, value ) -> equal
+                        .set( equal.get() && roster.getRow( row ).get( field ).equals( value ) ) );
                 if ( equal.get() )
                     return r;
             }

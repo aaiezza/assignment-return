@@ -119,8 +119,9 @@ public class RosterView extends JPanel
             return rosterTable.getSelectedRow();
 
         final Map<String, String> values = Maps.newHashMap();
-        for ( int c = 0; c < rosterTable.getModel().getColumnCount(); c++ )
-            values.put( rosterTable.getModel().getColumnName( c ),
+        for ( int c = 0; c < rosterTable.getModel().getColumnCount() &&
+                c < rosterTable.getColumnCount(); c++ )
+            values.put( rosterTable.getColumnName( c ),
                 (String) rosterTable.getValueAt( rosterTable.getSelectedRow(), c ) );
         return getTableModel().getRowFromValues( values );
     }

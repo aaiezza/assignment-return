@@ -41,15 +41,13 @@ public class Roster
 
     private TreeBasedTable<Integer, String, String> roster;
 
-    private final List<String>                      headerOrder            = Lists.newArrayList();
-
     private final List<Integer>                     rowOrder               = Lists.newArrayList();
 
     public Roster()
     {
         roster = TreeBasedTable.create(
             Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder ).compare( o1, o2 ) ),
-            Ordering.from( ( o1, o2 ) -> Ordering.explicit( headerOrder ).compare( o1, o2 ) ) );
+            Ordering.natural() );
     }
 
     public int getNumberOfRows()
@@ -74,8 +72,6 @@ public class Roster
 
     public String put( final int rowNumber, final String fieldName, final String value )
     {
-        if ( !headerOrder.contains( fieldName ) )
-            headerOrder.add( fieldName );
         if ( !rowOrder.contains( rowNumber ) )
             rowOrder.add( rowNumber );
         return roster.put( rowNumber, fieldName, value );
@@ -102,14 +98,9 @@ public class Roster
             throw new IllegalArgumentException( String.format(
                 "The size of the list of order of rows must be exactly %d", getNumberOfRows() ) );
 
-        this.rowOrder.clear();
-        this.rowOrder.addAll( rowOrder );
-
-
-        // TODO not going to work without remaking the whole damn thing
-        roster = TreeBasedTable.create(
-            Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder ).compare( o1, o2 ) ),
-            Ordering.from( ( o1, o2 ) -> Ordering.explicit( headerOrder ).compare( o1, o2 ) ) );
+        final Roster newRoster = new Roster();
+        rowOrder.forEach( r -> columnKeySet().forEach( c -> newRoster.put( r, c, get( r, c ) ) ) );
+        roster = newRoster.roster;
     }
 
     public static Roster create()

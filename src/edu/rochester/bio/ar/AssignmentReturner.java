@@ -336,9 +336,7 @@ public class AssignmentReturner implements Runnable
         {
             try
             {
-                PDDocument ca = PDDocument.load( combinedAssignment );
-                ca.close();
-                as = new AssignmentSplitter( ca, outputDirectory,
+                as = new AssignmentSplitter( PDDocument.load( combinedAssignment ), outputDirectory,
                         new AssignmentReturnerInterpolator( roster, assignmentName ) );
             } catch ( IOException e )
             {

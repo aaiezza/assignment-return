@@ -52,8 +52,7 @@ public abstract class StudentAssignmentConfirmationView extends JSplitPane
             public void setSelectedRow( int row )
             {
                 super.setSelectedRow( row );
-                // confirmedStudent.setText( getRowIdentifier(
-                // this.getSelectedTableModelRow() ) );
+                confirmedStudent.setText( getRowIdentifier( this.getSelectedTableModelRow() ) );
             }
         };
     }
@@ -302,7 +301,7 @@ public abstract class StudentAssignmentConfirmationView extends JSplitPane
             rosterFilter.setEnabled( false );
             // forwardArrow.setEnabled( false );
             // confirmButton.setEnabled( false );
-            backArrow.setEnabled( false );
+            // backArrow.setEnabled( false );
         }
     }
 
