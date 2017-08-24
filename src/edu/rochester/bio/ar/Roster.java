@@ -10,8 +10,6 @@ import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.beust.jcommander.internal.Lists;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeBasedTable;
 
 /**
@@ -41,13 +39,9 @@ public class Roster
 
     private TreeBasedTable<Integer, String, String> roster;
 
-    private final List<Integer>                     rowOrder               = Lists.newArrayList();
-
     public Roster()
     {
-        roster = TreeBasedTable.create(
-            Ordering.from( ( o1, o2 ) -> Ordering.explicit( rowOrder ).compare( o1, o2 ) ),
-            Ordering.natural() );
+        roster = TreeBasedTable.create();
     }
 
     public int getNumberOfRows()
@@ -72,8 +66,6 @@ public class Roster
 
     public String put( final int rowNumber, final String fieldName, final String value )
     {
-        if ( !rowOrder.contains( rowNumber ) )
-            rowOrder.add( rowNumber );
         return roster.put( rowNumber, fieldName, value );
     }
 
@@ -87,19 +79,14 @@ public class Roster
         roster.rowMap().remove( rowNumber );
     }
 
-    public List<Integer> getRowOrder()
-    {
-        return rowOrder;
-    }
-
     public void setRowOrder( final List<Integer> rowOrder )
     {
-        if ( this.rowOrder.size() != rowOrder.size() )
-            throw new IllegalArgumentException( String.format(
-                "The size of the list of order of rows must be exactly %d", getNumberOfRows() ) );
-
         final Roster newRoster = new Roster();
-        rowOrder.forEach( r -> columnKeySet().forEach( c -> newRoster.put( r, c, get( r, c ) ) ) );
+        final AtomicInteger rI = new AtomicInteger();
+        rowOrder.forEach( r -> {
+            columnKeySet().forEach( c -> newRoster.put( rI.get(), c, get( r, c ) ) );
+            rI.incrementAndGet();
+        } );
         roster = newRoster.roster;
     }
 
@@ -140,5 +127,32 @@ public class Roster
             for ( int c = 0; c < data[r].length; c++ )
                 data[r][c] = get( r, getHeaders()[c] );
         return data;
+    }
+
+    @Override
+    public String toString()
+    {
+        final String NEWLINE = "\n";
+        final int LIMIT = 12;
+        final String S = "%-" + LIMIT + "s";
+
+        final StringBuilder out = new StringBuilder();
+        out.append( String.format( S, "rowIndex" ) );
+        for ( final String header : getHeaders() )
+            out.append(
+                String.format( S, header.substring( 0, Math.min( header.length(), LIMIT - 1 ) ) ) );
+
+        out.append( NEWLINE );
+
+        rowMap().forEach( ( rI, cols ) -> {
+            out.append( String.format( S, rI ) );
+            cols.forEach( ( h, v ) -> out.append(
+                String.format( S, v.substring( 0, Math.min( v.length(), LIMIT - 1 ) ) ) ) );
+            out.append( NEWLINE );
+        } );
+
+        out.append( NEWLINE );
+
+        return out.toString();
     }
 }
