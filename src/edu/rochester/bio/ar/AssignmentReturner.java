@@ -336,14 +336,35 @@ public class AssignmentReturner implements Runnable
         {
             try
             {
+                ari = new AssignmentReturnerInterpolator( pdfNamingConvention, roster,
+                        assignmentName );
                 as = new AssignmentSplitter( PDDocument.load( combinedAssignment ), outputDirectory,
-                        new AssignmentReturnerInterpolator( roster, assignmentName ) );
+                        ari );
             } catch ( IOException e )
             {
                 e.printStackTrace();
             }
         }
         return as;
+    }
+
+    public AssignmentEmailer getAssignmentEmailer()
+    {
+        if ( ae == null || changed )
+        {
+            try
+            {
+                ari = new AssignmentReturnerInterpolator( pdfNamingConvention, roster,
+                        assignmentName );
+                ae = new AssignmentEmailer(
+                        new AssignmentReturnerInterpolator( roster, assignmentName ), emailTemplate,
+                        hostName, smtpPort, fromEmail );
+            } catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        return ae;
     }
 
     /**
@@ -559,9 +580,7 @@ public class AssignmentReturner implements Runnable
     public void emailRecipients() throws IOException, EmailException
     {
         changed = true;
-        ae = new AssignmentEmailer( new AssignmentReturnerInterpolator( roster, assignmentName ),
-                emailTemplate, hostName, smtpPort, fromEmail );
-        ae.sendEmails( password );
+        getAssignmentEmailer().sendEmails( password );
         changed = false;
     }
 
