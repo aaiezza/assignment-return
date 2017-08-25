@@ -50,7 +50,7 @@ public class ARSwingController implements ActionListener
         arsv.addActionListener( this );
     }
 
-    public StudentAssignmentConfirmationController getStudentAssignmentConfkrmationController()
+    public StudentAssignmentConfirmationController getStudentAssignmentConfirmationController()
     {
         return sacc;
     }

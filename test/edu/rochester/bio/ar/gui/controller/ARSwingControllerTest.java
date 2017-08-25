@@ -47,7 +47,7 @@ public class ARSwingControllerTest
     public void testMainInputs() throws InterruptedException
     {
         asc = new ARSwingController();
-        asc.getStudentAssignmentConfkrmationController().setAssignmentReturner( ar );
+        asc.getStudentAssignmentConfirmationController().setAssignmentReturner( ar );
         while ( asc.getARSwingView().isVisible() )
         {
             Thread.sleep( 0 );
